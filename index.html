@@ -91,7 +91,7 @@
                     <h2 class="text-3xl font-bold text-slate-800">Laporan Kemajuan Portfolio (Minggu 1)</h2>
                 </div>
                 
-                <p class="text-sm text-slate-500 mb-6 italic"><i class="fas fa-hand-pointer mr-1"></i> Klik pada mana-mana kotak portfolio di bawah untuk melihat senarai Pasukan (PIC) yang bertugas.</p>
+                <p class="text-sm text-slate-500 mb-6 italic"><i class="fas fa-hand-pointer mr-1"></i> Klik pada mana-mana kotak portfolio di bawah untuk melihat senarai 17 AJK dan tugasan spesifik mereka.</p>
 
                 <div class="space-y-6">
                     
@@ -111,12 +111,42 @@
                         </div>
                         
                         <div id="pasukan1" class="hidden bg-white p-5 border-t border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-blue-500"></i>Senarai AJK Bertugas (4 Orang)</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="flex items-center p-2 bg-blue-50 rounded"><div class="w-8 h-8 rounded-full bg-blue-200 text-blue-700 flex justify-center items-center font-bold mr-3">A</div><div><p class="text-sm font-bold text-slate-800">En. Azlan (Mock)</p><p class="text-xs text-slate-500">Ketua Penyelaras</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">B</div><div><p class="text-sm font-bold text-slate-800">Pn. Balqis (Mock)</p><p class="text-xs text-slate-500">Pengurusan VIP</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">C</div><div><p class="text-sm font-bold text-slate-800">Cik Carmila (Mock)</p><p class="text-xs text-slate-500">Pendaftaran RSVP</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">D</div><div><p class="text-sm font-bold text-slate-800">En. Daud (Mock)</p><p class="text-xs text-slate-500">Penyedia TOR</p></div></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-blue-500"></i>Senarai AJK (Jemputan & TOR)</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center p-2 bg-blue-50 rounded"><div class="w-8 h-8 rounded-full bg-blue-200 text-blue-700 flex justify-center items-center font-bold mr-3 text-sm">A</div><div><p class="text-sm font-bold text-slate-800">Dr. Halizah</p><p class="text-xs text-slate-500">Ketua Penyelaras, Penyediaan TOR & Draf Surat</p></div></div>
+                                        
+                                        <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">B</div><div><p class="text-sm font-bold text-slate-800">Dr. Faizah</p><p class="text-xs text-slate-500">Jemputan VIP, Selaraskan Ucapan VIP & Protokol</p></div></div>
+
+                                        <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">C</div><div><p class="text-sm font-bold text-slate-800">Dr. Abry</p><p class="text-xs text-slate-500">Jemputan VIP, Selaraskan Ucapan VIP & Protokol</p></div></div>
+
+                                        <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">D</div><div><p class="text-sm font-bold text-slate-800">Cik Ruran</p><p class="text-xs text-slate-500">Penghantaran Emel Jemputan</p></div></div>
+
+                                        <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">E</div><div><p class="text-sm font-bold text-slate-800">Puan Lida</p><p class="text-xs text-slate-500">Penghantaran Emel Jemputan</p></div></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-blue-500"></i>Tugasan Spesifik (4 Checklist)</h4>
+                                    <div class="space-y-2" onclick="event.stopPropagation() /* Elak panel tertutup bila klik checkbox */">
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1" checked>
+                                            <span class="ml-2 text-sm text-slate-700">1. Invitation (Attendance / Usherer)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">2. VIPs (Program / Speech)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1" checked>
+                                            <span class="ml-2 text-sm text-slate-700">3. Agenda Bengkel</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">11. Reminder / Notification / Welcoming</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,12 +167,41 @@
                         </div>
                         
                         <div id="pasukan2" class="hidden bg-white p-5 border-t border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-green-500"></i>Senarai AJK Bertugas (4 Orang)</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="flex items-center p-2 bg-green-50 rounded"><div class="w-8 h-8 rounded-full bg-green-200 text-green-700 flex justify-center items-center font-bold mr-3">E</div><div><p class="text-sm font-bold text-slate-800">Pn. Emma (Mock)</p><p class="text-xs text-slate-500">Ketua Penyelaras Tempat</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">F</div><div><p class="text-sm font-bold text-slate-800">En. Farid (Mock)</p><p class="text-xs text-slate-500">Sebut Harga Katering</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">G</div><div><p class="text-sm font-bold text-slate-800">Cik Gina (Mock)</p><p class="text-xs text-slate-500">Pengurusan Parkir</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">H</div><div><p class="text-sm font-bold text-slate-800">En. Hafiz (Mock)</p><p class="text-xs text-slate-500">Keselamatan & Evakuasi</p></div></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-green-500"></i>Senarai AJK (5 Orang)</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center p-2 bg-green-50 rounded hover:bg-green-100 transition"><div class="w-8 h-8 rounded-full bg-green-200 text-green-700 flex justify-center items-center font-bold mr-3 text-sm">F</div><div><p class="text-sm font-bold text-slate-800">Cik Ruran</p><p class="text-xs text-slate-500">Venue & Penyediaan Kertas Kerja</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">G</div><div><p class="text-sm font-bold text-slate-800">Cik Amirah</p><p class="text-xs text-slate-500">Pengurusan Tempat (Venue)</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">H</div><div><p class="text-sm font-bold text-slate-800">Encik Syahmir</p><p class="text-xs text-slate-500">Video Housekeeping, Parking & Arah ke Ballroom</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">I</div><div><p class="text-sm font-bold text-slate-800">Puan Lida</p><p class="text-xs text-slate-500">Pengurusan Makanan (F&B)</p></div></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-green-500"></i>Tugasan Spesifik (5 Checklist)</h4>
+                                    <div class="space-y-2" onclick="event.stopPropagation()">
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">4. Venue / Avenue Layout</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">5. Food & Beverage (Katering)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">8. Printing (Tanda Nama / Buku Program)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">9. Car Park (Direction / Floor)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">10. House-Keeping (Safety / Evacuation)</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -163,12 +222,28 @@
                         </div>
                         
                         <div id="pasukan3" class="hidden bg-white p-5 border-t border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-purple-500"></i>Senarai AJK Bertugas (4 Orang)</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="flex items-center p-2 bg-purple-50 rounded"><div class="w-8 h-8 rounded-full bg-purple-200 text-purple-700 flex justify-center items-center font-bold mr-3">I</div><div><p class="text-sm font-bold text-slate-800">Ts. Ismail (Mock)</p><p class="text-xs text-slate-500">Ketua Sistem IT</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">J</div><div><p class="text-sm font-bold text-slate-800">En. Jamal (Mock)</p><p class="text-xs text-slate-500">Sistem Pendaftaran QR</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">K</div><div><p class="text-sm font-bold text-slate-800">Pn. Kamelia (Mock)</p><p class="text-xs text-slate-500">Admin Engagement Portal</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">L</div><div><p class="text-sm font-bold text-slate-800">En. Lokman (Mock)</p><p class="text-xs text-slate-500">Sokongan Audio Visual</p></div></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-purple-500"></i>Senarai AJK (4 Orang)</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center p-2 bg-purple-50 rounded hover:bg-purple-100 transition"><div class="w-8 h-8 rounded-full bg-purple-200 text-purple-700 flex justify-center items-center font-bold mr-3 text-sm">K</div><div><p class="text-sm font-bold text-slate-800">Encik Rahman</p><p class="text-xs text-slate-500">Ketua Sistem IT</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">L</div><div><p class="text-sm font-bold text-slate-800">Encik Aliff</p><p class="text-xs text-slate-500">Back End System</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">M</div><div><p class="text-sm font-bold text-slate-800">Cik Izzah</p><p class="text-xs text-slate-500">Back End System</p></div></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-purple-500"></i>Tugasan Spesifik (2 Checklist)</h4>
+                                    <div class="space-y-2" onclick="event.stopPropagation()">
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-purple-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">6. IT System (State Engagement Portal)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-purple-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">7. Audio / Visual (PA System / Negaraku / Doa)</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -189,11 +264,38 @@
                         </div>
                         
                         <div id="pasukan4" class="hidden bg-white p-5 border-t border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-orange-500"></i>Senarai AJK Bertugas (3 Orang)</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="flex items-center p-2 bg-orange-50 rounded"><div class="w-8 h-8 rounded-full bg-orange-200 text-orange-700 flex justify-center items-center font-bold mr-3">M</div><div><p class="text-sm font-bold text-slate-800">Cik Maria (Mock)</p><p class="text-xs text-slate-500">Ketua Publisiti & Media</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">N</div><div><p class="text-sm font-bold text-slate-800">En. Nabil (Mock)</p><p class="text-xs text-slate-500">Pereka Grafik (Backdrop)</p></div></div>
-                                <div class="flex items-center p-2 bg-slate-50 rounded"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3">O</div><div><p class="text-sm font-bold text-slate-800">Pn. Olivia (Mock)</p><p class="text-xs text-slate-500">Pengarah Gimik Montaj</p></div></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-orange-500"></i>Senarai AJK (3 Orang)</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center p-2 bg-orange-50 rounded hover:bg-orange-100 transition"><div class="w-8 h-8 rounded-full bg-orange-200 text-orange-700 flex justify-center items-center font-bold mr-3 text-sm">O</div><div><p class="text-sm font-bold text-slate-800">Encik Syahmir</p><p class="text-xs text-slate-500">Photographer & Video Rasmi</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">P</div><div><p class="text-sm font-bold text-slate-800">Encik Alif</p><p class="text-xs text-slate-500">Photographer & Video Rasmi</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">Q</div><div><p class="text-sm font-bold text-slate-800">Cik Izzah</p><p class="text-xs text-slate-500">Sijil, Montaj, Backdrop & Lanyard</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">R</div><div><p class="text-sm font-bold text-slate-800">Puan Fahada</p><p class="text-xs text-slate-500">Montaj & Backdrop</p></div></div>
+<div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">S</div><div><p class="text-sm font-bold text-slate-800">Cik Syu</p><p class="text-xs text-slate-500">Lanyard & Buku Program</p></div></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-orange-500"></i>Tugasan Spesifik (4 Checklist)</h4>
+                                    <div class="space-y-2" onclick="event.stopPropagation()">
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-orange-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">12. Press Conference (UKK)</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-orange-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">13. Backdrop Design</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-orange-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">14. Gimik Launching / Montage</span>
+                                        </label>
+                                        <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
+                                            <input type="checkbox" class="w-4 h-4 text-orange-600 rounded mt-1">
+                                            <span class="ml-2 text-sm text-slate-700">15. Photograph / Video Rasmi</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -644,6 +746,90 @@
             renderChecklistMain();
         };
 
-    </script>
+        const senaraiAJK = {
+  "maklumat_projek": {
+    "nama_projek": "Digital Health Blueprint",
+    "laporan": "Kemajuan Portfolio (Minggu 1)",
+    "tarikh_kemas_kini": "1 April 2026"
+  },
+  "senarai_ajk_tugasan": {
+    "portfolio_1_jemputan_kehadiran_tor": {
+      "status": "75%",
+      "tugasan": {
+        "ketua_penyelaras_draf_surat_dan_tor": [
+          "Dr. Haliza"
+        ],
+        "pengurusan_vip_dan_protokol": [
+          "Dr. Faizah",
+          "Dr. Aboy"
+        ],
+        "bantuan_penghantaran_jemputan": [
+          "Punjab",
+          "Kak Lina"
+        ]
+      }
+    },
+    "portfolio_2_logistik_makanan_tempat": {
+      "status": "60%",
+      "tugasan": {
+        "pengurusan_venue_dan_tempat": [
+          "Ruway",
+          "Amirah"
+        ],
+        "pengurusan_makanan_dan_hidangan": [
+          "Lidan"
+        ],
+        "video_housekeeping_parking_dan_arah_dewan": [
+          "Syahmir"
+        ]
+      }
+    },
+    "portfolio_3_sistem_it_pendaftaran": {
+      "status": "40%",
+      "nota": "Tiada pindaan tulisan tangan, mengekalkan nama sedia ada",
+      "tugasan": {
+        "ketua_sistem_it": [
+          "Ts. Ismail"
+        ],
+        "sistem_pendaftaran_qr": [
+          "En. Jamal"
+        ],
+        "admin_engagement_portal": [
+          "Pn. Kamelia"
+        ],
+        "sokongan_audio_visual": [
+          "En. Lokman"
+        ]
+      }
+    },
+    "portfolio_4_media_publisiti_gimik": {
+      "status": "20%",
+      "tugasan": {
+        "juru_gambar_photographer": [
+          "Atif"
+        ],
+        "juru_video_videographer": [
+          "Syahmir"
+        ],
+        "montaj_dan_backdrop": [
+          "Izzah",
+          "Fahada"
+        ],
+        "penyediaan_lanyard": [
+          "Sya",
+          "Izzah"
+        ],
+        "penyediaan_buku_program": [
+          "Sya"
+        ],
+        "penyediaan_sijil": [
+          "Izzah"
+        ]
+      }
+    }
+  }
+};
+
+</script>
 </body>
 </html>
