@@ -40,7 +40,7 @@
                     <i class="fas fa-users-cog w-6"></i> Kemas Kini Jawatankuasa
                 </button>
                 <button onclick="openTab('stakeholders')" id="btn-stakeholders" class="tab-btn w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-100 transition">
-                    <i class="fas fa-address-book w-6"></i> Senarai Peserta (250 Wakil)
+                    <i class="fas fa-address-book w-6"></i> Senarai Peserta (300 Pax)
                 </button>
                 <button onclick="openTab('checklist')" id="btn-checklist" class="tab-btn w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-100 transition">
                     <i class="fas fa-tasks w-6"></i> Senarai Semak (Checklist)
@@ -323,87 +323,65 @@
                 }
             </script>
             <div id="stakeholders" class="tab-content bg-white rounded-xl shadow-md p-8 border border-slate-100">
-                <h2 class="text-3xl font-bold text-slate-800 border-b pb-4 mb-6">Pemetaan & Senarai Peserta (250 Pax)</h2>
-                
-                <div class="mb-8 bg-slate-50 p-5 rounded-xl border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-700 mb-3"><i class="fas fa-chart-pie mr-2 text-blue-500"></i>Panduan Sasaran Kuota (Stakeholders)</h3>
-                    <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-blue-50 text-slate-700">
-                                    <th class="p-2 border-b font-bold">Kategori Agensi</th>
-                                    <th class="p-2 border-b font-bold text-center">Sasaran Kuota</th>
-                                    <th class="p-2 border-b font-bold">Status Penapisan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-slate-50">
-                                    <td class="p-2">KKM & Jabatan Kesihatan Negeri (JKN)</td>
-                                    <td class="p-2 text-center">80 pax</td>
-                                    <td class="p-2 text-green-600 font-semibold"><i class="fas fa-check mr-1"></i> Selesai Disenaraikan</td>
-                                </tr>
-                                <tr class="border-b hover:bg-slate-50">
-                                    <td class="p-2">Kementerian Luar (MOHE, MINDEF, KDN)</td>
-                                    <td class="p-2 text-center">15 pax</td>
-                                    <td class="p-2 text-orange-500 font-semibold"><i class="fas fa-sync-alt mr-1"></i> Mengenal pasti wakil</td>
-                                </tr>
-                                <tr class="border-b hover:bg-slate-50">
-                                    <td class="p-2">Fasiliti Kesihatan Awam & Swasta (Hospital/Klinik)</td>
-                                    <td class="p-2 text-center">45 pax</td>
-                                    <td class="p-2 text-green-600 font-semibold"><i class="fas fa-check mr-1"></i> Selesai Disenaraikan</td>
-                                </tr>
-                                <tr class="border-b hover:bg-slate-50">
-                                    <td class="p-2">Badan Profesional & Pakar (SME/Deloitte/PwC)</td>
-                                    <td class="p-2 text-center">30 pax</td>
-                                    <td class="p-2 text-orange-500 font-semibold"><i class="fas fa-clock mr-1"></i> Menunggu pengesahan</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2">Agensi Antarabangsa (WHO, UNDP, World Bank)</td>
-                                    <td class="p-2 text-center">15 pax</td>
-                                    <td class="p-2 text-orange-500 font-semibold"><i class="fas fa-clock mr-1"></i> Menunggu pengesahan</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="flex justify-between items-center border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-slate-800">Pemetaan & Senarai Peserta</h2>
+                    <div class="bg-blue-100 border border-blue-300 px-4 py-2 rounded-lg text-center">
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Jumlah Terkini</p>
+                        <h3 class="text-2xl font-black text-blue-900"><span id="total-pax-display">0</span> <span class="text-sm font-medium text-blue-700">/ 300 Pax</span></h3>
                     </div>
                 </div>
 
-                <div id="bahagian-peserta">
-                    <div class="flex justify-between items-center border-b pb-2 mb-4">
-                        <h3 class="text-xl font-bold text-slate-700"><i class="fas fa-address-book mr-2 text-blue-500"></i>Status Pengesahan Wakil Agensi</h3>
-                    </div>
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-8 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4"><i class="fas fa-user-plus mr-2 text-blue-500"></i>Borang Kemasukan Peserta (Admin)</h3>
+                    <form id="formPesertaDinamik" onsubmit="tambahPeserta(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Kategori Utama</label>
+                                <select id="inputKategoriUtama" onchange="kemasKiniSubKategori()" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm font-semibold text-slate-700">
+                                    <option value="">-- Pilih Kategori Agensi --</option>
+                                    <option value="KKM & JKN">KKM & Jabatan Kesihatan Negeri (JKN)</option>
+                                    <option value="Kementerian Luar">Kementerian Luar (KDN, MINDEF, dll)</option>
+                                    <option value="Fasiliti Kesihatan">Fasiliti Kesihatan Awam & Swasta</option>
+                                    <option value="Badan Profesional & Pakar">Badan Profesional & Pakar Industri</option>
+                                    <option value="Agensi Antarabangsa">Agensi Antarabangsa</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Bahagian / Agensi Spesifik</label>
+                                <select id="inputSubKategori" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm disabled:bg-slate-100">
+                                    <option value="">-- Sila pilih kategori utama dahulu --</option>
+                                </select>
+                            </div>
+                        </div>
 
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
-                        <h4 class="font-bold text-blue-800 mb-3 text-sm"><i class="fas fa-user-plus mr-2"></i>Tambah Peserta Baharu</h4>
-                        <form id="formPeserta" onsubmit="tambahPeserta(event)" class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                            <input type="text" id="inputNama" placeholder="Nama Peserta (Cth: Dr. Ali)" required class="p-2 border rounded text-sm w-full focus:ring-2 focus:ring-blue-500 outline-none">
-                            <input type="text" id="inputJawatan" placeholder="Jawatan (Cth: Pegawai Perubatan)" required class="p-2 border rounded text-sm w-full focus:ring-2 focus:ring-blue-500 outline-none">
-                            <input type="text" id="inputAgensi" placeholder="Agensi (Cth: HKL)" required class="p-2 border rounded text-sm w-full focus:ring-2 focus:ring-blue-500 outline-none">
-                            <select id="inputStatus" class="p-2 border rounded text-sm w-full focus:ring-2 focus:ring-blue-500 outline-none">
-                                <option value="Disahkan">Disahkan</option>
-                                <option value="Menunggu">Menunggu</option>
-                                <option value="Belum Respon">Belum Respon</option>
-                            </select>
-                            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition w-full text-sm shadow"><i class="fas fa-save mr-1"></i> Simpan</button>
-                        </form>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-lg border border-slate-200">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-700">
-                                    <th class="p-3 border-b font-bold w-12 text-center">Bil.</th>
-                                    <th class="p-3 border-b font-bold">Nama Peserta</th>
-                                    <th class="p-3 border-b font-bold">Jawatan & Pangkat</th>
-                                    <th class="p-3 border-b font-bold">Agensi / Kementerian</th>
-                                    <th class="p-3 border-b font-bold text-center">Status Kehadiran</th>
-                                    <th class="p-3 border-b font-bold text-center w-12">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBodyPeserta" class="text-slate-600">
-                                </tbody>
-                        </table>
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Nama Penuh</label>
+                                <input type="text" id="inputNamaDinamik" placeholder="Cth: Dr. Ali Bin Abu" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Jawatan Utama</label>
+                                <input type="text" id="inputJawatanDinamik" placeholder="Cth: CDO / Pengarah" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Status</label>
+                                <select id="inputStatusDinamik" class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold">
+                                    <option value="Disahkan">Disahkan</option>
+                                    <option value="Menunggu">Menunggu</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700 transition shadow-md"><i class="fas fa-save mr-2"></i> Simpan ke Pangkalan Data</button>
+                        </div>
+                    </form>
                 </div>
+
+                <h3 class="text-xl font-bold text-slate-700 mb-3"><i class="fas fa-list-alt mr-2 text-blue-500"></i>Senarai Terperinci Mengikut Agensi</h3>
+                <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm" id="jadualBerkumpulanContainer">
+                    </div>
             </div>
 
             <div id="checklist" class="tab-content bg-white rounded-xl shadow-md p-8 border border-slate-100">
@@ -544,65 +522,132 @@
             if(tabName === 'checklist') closeItemDetail();
         }
 
-        // --- FUNGSI LOCAL STORAGE PESERTA ---
-        let senaraiPeserta = [
-            {nama: "Dr. Ahmad Zikri", jawatan: "Pengarah Kesihatan", agensi: "JKN Selangor", status: "Disahkan"},
-            {nama: "Ir. Ts. Siti Nurhaliza", jawatan: "Ketua Pegawai Digital", agensi: "Kementerian Digital", status: "Menunggu"},
-            {nama: "En. Wong Kim Loong", jawatan: "Ketua Inovasi", agensi: "IHH Healthcare", status: "Disahkan"}
-        ];
+        // --- DATA STRUKTUR SUB-KATEGORI (DATABASE REFERENCE) ---
+        const dataSubKategori = {
+            "KKM & JKN": ["Bahagian Perancangan Kesihatan (HPU)", "Bahagian Perkembangan Perubatan (BPP)", "Bahagian Kesihatan Awam (BKA)", "Bahagian Pengurusan Maklumat (BPM)", "Jabatan Kesihatan Negeri (JKN) Selangor", "Jabatan Kesihatan Negeri (JKN) Johor", "JKN Negeri Lain-Lain"],
+            "Kementerian Luar": ["MOHE (KPT)", "MINDEF (Kementah)", "KDN", "Kementerian Kewangan (MOF)", "Kementerian Digital", "MAMPU / JDN"],
+            "Fasiliti Kesihatan": ["Hospital Awam (KKM)", "Klinik Kesihatan (KK)", "IHH Healthcare", "KPJ Healthcare", "Sunway Medical", "Klinik Swasta"],
+            "Badan Profesional & Pakar": ["Malaysian Medical Council (MMC)", "Malaysian Medical Association (MMA)", "PwC", "Deloitte", "McKinsey", "SME Teknologi Kesihatan"],
+            "Agensi Antarabangsa": ["WHO", "UNDP", "World Bank", "UNICEF"]
+        };
 
-        if(localStorage.getItem('dataPesertaHPU')) {
-            senaraiPeserta = JSON.parse(localStorage.getItem('dataPesertaHPU'));
+        // --- FUNGSI LOCAL STORAGE PESERTA & AUTO CALCULATE ---
+        let senaraiPeserta = [];
+        if(localStorage.getItem('dataPesertaDinamikHPU')) {
+            senaraiPeserta = JSON.parse(localStorage.getItem('dataPesertaDinamikHPU'));
         }
 
-        function paparJadual() {
-            const tbody = document.getElementById('tableBodyPeserta');
-            tbody.innerHTML = ''; 
+        function kemasKiniSubKategori() {
+            const kategoriUtama = document.getElementById('inputKategoriUtama').value;
+            const subDropdown = document.getElementById('inputSubKategori');
+            
+            subDropdown.innerHTML = '<option value="">-- Pilih Bahagian / Agensi --</option>';
+            
+            if(kategoriUtama && dataSubKategori[kategoriUtama]) {
+                dataSubKategori[kategoriUtama].forEach(sub => {
+                    subDropdown.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+                subDropdown.disabled = false;
+            } else {
+                subDropdown.innerHTML = '<option value="">-- Sila pilih kategori utama dahulu --</option>';
+                subDropdown.disabled = true;
+            }
+        }
 
+        function paparJadualBerkumpulan() {
+            const container = document.getElementById('jadualBerkumpulanContainer');
+            container.innerHTML = '';
+
+            // Update Total Pax Count
+            document.getElementById('total-pax-display').innerText = senaraiPeserta.length;
+
+            if(senaraiPeserta.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-500 bg-slate-50">Tiada data peserta dimasukkan lagi. Sila tambah di atas.</div>';
+                return;
+            }
+
+            // Kumpulkan (Group) peserta mengikut Kategori Utama
+            const groupedData = {};
             senaraiPeserta.forEach((peserta, index) => {
-                let badgeColor = "";
-                if(peserta.status === "Disahkan") badgeColor = "bg-green-100 text-green-700 border-green-200";
-                else if(peserta.status === "Menunggu") badgeColor = "bg-orange-100 text-orange-700 border-orange-200";
-                else badgeColor = "bg-slate-100 text-slate-500 border-slate-200";
-
-                const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-slate-50 transition";
-                tr.innerHTML = `
-                    <td class="p-3 text-center font-medium">${index + 1}</td>
-                    <td class="p-3 font-semibold text-slate-800">${peserta.nama}</td>
-                    <td class="p-3">${peserta.jawatan}</td>
-                    <td class="p-3">${peserta.agensi}</td>
-                    <td class="p-3 text-center">
-                        <span class="${badgeColor} px-3 py-1 rounded-full text-xs font-bold border">${peserta.status}</span>
-                    </td>
-                    <td class="p-3 text-center">
-                        <button onclick="padamPeserta(${index})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded transition" title="Padam">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                if(!groupedData[peserta.kategoriUtama]) {
+                    groupedData[peserta.kategoriUtama] = [];
+                }
+                peserta.originalIndex = index; // simpan index untuk delete nanti
+                groupedData[peserta.kategoriUtama].push(peserta);
             });
+
+            // Render Jadual
+            let htmlJadual = '<table class="w-full text-left border-collapse text-sm"><tbody class="text-slate-600">';
+            
+            for (const [kategoriUtama, senarai] of Object.entries(groupedData)) {
+                // Header Kategori
+                htmlJadual += `
+                    <tr class="bg-blue-900 text-white">
+                        <td colspan="5" class="p-3 font-bold uppercase tracking-wide text-xs"><i class="fas fa-layer-group mr-2"></i>${kategoriUtama} (${senarai.length} Pax)</td>
+                    </tr>
+                    <tr class="bg-slate-100 text-slate-700 font-bold text-xs uppercase">
+                        <td class="p-2 border-b w-1/3">Bahagian / Agensi</td>
+                        <td class="p-2 border-b">Nama Peserta</td>
+                        <td class="p-2 border-b">Jawatan</td>
+                        <td class="p-2 border-b text-center">Status</td>
+                        <td class="p-2 border-b text-center">Tindakan</td>
+                    </tr>
+                `;
+
+                // Data Peserta di bawah kategori tersebut
+                senarai.forEach(p => {
+                    let badgeColor = p.status === "Disahkan" ? "bg-green-100 text-green-700 border-green-200" : "bg-orange-100 text-orange-700 border-orange-200";
+                    
+                    htmlJadual += `
+                        <tr class="border-b hover:bg-slate-50 bg-white">
+                            <td class="p-3 font-semibold text-slate-800 border-r bg-slate-50">${p.subKategori}</td>
+                            <td class="p-3 font-bold">${p.nama}</td>
+                            <td class="p-3 text-xs">${p.jawatan}</td>
+                            <td class="p-3 text-center"><span class="${badgeColor} px-2 py-1 rounded text-[10px] font-bold border uppercase">${p.status}</span></td>
+                            <td class="p-3 text-center">
+                                <button onclick="padamPeserta(${p.originalIndex})" class="text-red-400 hover:text-red-600 transition" title="Padam">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            htmlJadual += '</tbody></table>';
+            container.innerHTML = htmlJadual;
         }
 
         function tambahPeserta(event) {
             event.preventDefault(); 
-            const nama = document.getElementById('inputNama').value;
-            const jawatan = document.getElementById('inputJawatan').value;
-            const agensi = document.getElementById('inputAgensi').value;
-            const status = document.getElementById('inputStatus').value;
+            const kategoriUtama = document.getElementById('inputKategoriUtama').value;
+            const subKategori = document.getElementById('inputSubKategori').value;
+            const nama = document.getElementById('inputNamaDinamik').value;
+            const jawatan = document.getElementById('inputJawatanDinamik').value;
+            const status = document.getElementById('inputStatusDinamik').value;
 
-            senaraiPeserta.push({ nama: nama, jawatan: jawatan, agensi: agensi, status: status });
-            localStorage.setItem('dataPesertaHPU', JSON.stringify(senaraiPeserta));
-            document.getElementById('formPeserta').reset();
-            paparJadual();
+            // Struktur JSON sedia untuk Database / API POST
+            const dataPesertaBaharu = { 
+                kategoriUtama: kategoriUtama, 
+                subKategori: subKategori, 
+                nama: nama, 
+                jawatan: jawatan, 
+                status: status 
+            };
+
+            senaraiPeserta.push(dataPesertaBaharu);
+            localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
+            
+            document.getElementById('formPesertaDinamik').reset();
+            kemasKiniSubKategori(); // reset dropdown
+            paparJadualBerkumpulan();
         }
 
         function padamPeserta(index) {
-            if(confirm("Adakah anda pasti mahu memadam peserta ini?")) {
+            if(confirm("Padam data peserta ini dari pangkalan data?")) {
                 senaraiPeserta.splice(index, 1);
-                localStorage.setItem('dataPesertaHPU', JSON.stringify(senaraiPeserta));
-                paparJadual();
+                localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
+                paparJadualBerkumpulan();
             }
         }
 
@@ -639,14 +684,13 @@
             grid.innerHTML = ''; 
             
             checklistData.forEach(item => {
-                const checkedHTML = item.checked ? 'checked' : '';
                 const itemHTML = `
-                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition bg-white shadow-sm">
-                        <label class="flex items-center cursor-pointer w-2/3">
-                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500" ${checkedHTML}>
-                            <span class="ml-3 font-medium text-slate-700 truncate">${item.title}</span>
-                        </label>
-                        <button onclick="openItemDetail(${item.id})" class="text-blue-600 hover:bg-blue-100 hover:text-blue-800 px-3 py-1 rounded text-sm font-semibold transition border border-transparent hover:border-blue-200">
+                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-blue-50 transition bg-white shadow-sm cursor-pointer" onclick="openItemDetail(${item.id})">
+                        <div class="flex items-center w-2/3">
+                            <i class="fas fa-edit text-blue-400 mr-3"></i>
+                            <span class="font-medium text-slate-700 truncate">${item.title}</span>
+                        </div>
+                        <button class="text-blue-600 hover:bg-blue-200 hover:text-blue-800 px-3 py-1 rounded text-sm font-semibold transition border border-transparent hover:border-blue-300">
                             <i class="fas fa-eye mr-1"></i> Perincian
                         </button>
                     </div>
@@ -659,24 +703,44 @@
             const item = checklistData.find(d => d.id === id);
             document.getElementById('detail-title').innerText = item.title;
             document.getElementById('detail-pic').innerText = item.pic;
-            document.getElementById('detail-content').innerHTML = item.content;
+            
+            // Muat turun nota yang pernah di-save (jika ada)
+            let savedData = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
+            
+            // Buang tag HTML asal supaya kotak edit nampak bersih (Plain Text)
+            let defaultText = item.content.replace(/<[^>]*>?/gm, ''); 
+            let currentContent = savedData[id] !== undefined ? savedData[id] : defaultText;
+
+            // Tukar bahagian content kepada kotak Textarea
+            document.getElementById('detail-content').innerHTML = `
+                <label class="block text-sm font-bold text-slate-700 mb-2 mt-4"><i class="fas fa-edit text-blue-500 mr-1"></i> Edit To-Do List / Nota:</label>
+                <textarea id="textarea-nota-${id}" placeholder="Taip senarai tugas di sini..." class="w-full h-40 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-700 bg-white shadow-inner mb-3 leading-relaxed">${currentContent}</textarea>
+                <div class="flex justify-end">
+                    <button onclick="simpanNota(${id})" class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition font-bold text-sm">
+                        <i class="fas fa-save mr-2"></i> Simpan
+                    </button>
+                </div>
+            `;
             
             const statusBadge = document.getElementById('detail-status');
-            if(item.checked) {
-                statusBadge.className = "bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200";
-                statusBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Selesai';
-            } else {
-                statusBadge.className = "bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold border border-orange-200";
-                statusBadge.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Dalam Tindakan';
-            }
+            statusBadge.className = "bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-200";
+            statusBadge.innerHTML = '<i class="fas fa-tasks mr-1"></i> To-Do List';
 
             document.getElementById('checklist-main-view').classList.add('hidden');
             document.getElementById('checklist-detail-view').classList.remove('hidden');
         }
 
-        function closeItemDetail() {
-            document.getElementById('checklist-detail-view').classList.add('hidden');
-            document.getElementById('checklist-main-view').classList.remove('hidden');
+        // FUNGSI BAHARU: Untuk simpan data ke browser
+        function simpanNota(id) {
+            const textarea = document.getElementById('textarea-nota-' + id);
+            const notaBaru = textarea.value;
+            
+            // Simpan ke localStorage
+            let savedData = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
+            savedData[id] = notaBaru;
+            localStorage.setItem('notaChecklistHPU', JSON.stringify(savedData));
+            
+            alert("Nota To-Do List telah berjaya disimpan!");
         }
 
         // --- FUNGSI TIMELINE FASA CHECKLIST ---
@@ -740,9 +804,8 @@
             });
         }
 
-        // INIT KESELURUHAN BILA PAGE LOAD
         window.onload = function() {
-            paparJadual();
+            paparJadualBerkumpulan();
             renderChecklistMain();
         };
 
