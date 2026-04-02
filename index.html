@@ -23,8 +23,8 @@
                 <p class="text-sm text-blue-200">Kemas Kini Status: Minggu 1 (Pembentangan Pengarah)</p>
             </div>
             <div class="text-right hidden md:block">
-                <p class="text-sm">Tarikh Semasa: 1 April 2026</p>
-                <p class="text-xs text-blue-300">HPU, Kementerian Kesihatan Malaysia</p>
+                <p class="text-sm text-blue-100">Tarikh Semasa: <span id="tarikh-semasa-header" class="font-bold text-white tracking-wide">Memuatkan...</span></p>
+                <p class="text-xs text-blue-300 mt-1">HPU, Kementerian Kesihatan Malaysia</p>
             </div>
         </div>
     </header>
@@ -49,6 +49,24 @@
                     <i class="fas fa-calendar-alt w-6"></i> Garis Masa (Timeline)
                 </button>
             </nav>
+
+            <div class="mt-8 border-t border-slate-200 pt-6">
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <button onclick="tukarBulan(-1)" class="text-slate-400 hover:text-blue-600 hover:bg-blue-50 w-8 h-8 rounded-full transition flex justify-center items-center"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <h4 id="kalendar-bulan-tahun" class="text-sm font-bold text-slate-800 uppercase tracking-wide">Bulan Tahun</h4>
+                    <button onclick="tukarBulan(1)" class="text-slate-400 hover:text-blue-600 hover:bg-blue-50 w-8 h-8 rounded-full transition flex justify-center items-center"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-2">
+                    <div>Ah</div><div>Is</div><div>Se</div><div>Ra</div><div>Kh</div><div>Ju</div><div>Sa</div>
+                </div>
+                <div id="kalendar-grid" class="grid grid-cols-7 gap-1 text-center text-sm text-slate-700">
+                    </div>
+                <div class="mt-5 text-[10px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1.5">
+                    <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-blue-600 rounded shadow-sm"></div> Hari Ini</div>
+                    <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-red-50 border border-red-300 rounded shadow-sm"></div> Bengkel (19-21 Mei)</div>
+                </div>
+            </div>
+
         </aside>
 
         <main class="w-full md:w-3/4">
@@ -65,10 +83,11 @@
                         <p class="text-[10px] text-blue-400 mt-2 italic">(Klik untuk lihat senarai)</p>
                     </div>
                     
-                    <div class="bg-green-50 border border-green-200 p-6 rounded-xl text-center">
+                    <div onclick="openTab('checklist')" class="bg-green-50 border border-green-200 p-6 rounded-xl text-center cursor-pointer hover:bg-green-100 hover:shadow-md transition transform hover:-translate-y-1">
                         <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
-                        <h3 id="progress-dashboard" class="text-2xl font-bold text-green-900">0%</h3>
-                        <p class="text-sm text-green-700 font-medium">Progres Keseluruhan</p>
+                        <h3 id="progress-dashboard" class="text-4xl font-black text-green-600">0%</h3>
+                        <p class="text-sm text-green-800 font-bold mt-1">Progres Keseluruhan</p>
+                        <p class="text-[10px] text-green-600 mt-2 italic">(Klik untuk urus senarai)</p>
                     </div>
                     
                     <div class="bg-orange-50 border border-orange-200 p-6 rounded-xl text-center">
@@ -100,7 +119,7 @@
                     <div class="border rounded-lg shadow-sm bg-slate-50 overflow-hidden transition hover:shadow-md cursor-pointer" onclick="togglePasukan('pasukan1')">
                         <div class="p-5 hover:bg-slate-100 transition">
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-lg font-bold"><i class="fas fa-envelope-open-text text-blue-600 mr-2"></i>Jemputan, Kehadiran & TOR</h3>
+                                <h3 class="text-lg font-bold"><i class="fas fa-envelope-open-text text-blue-600 mr-2"></i>Jemputan, Kehadiran </h3>
                                 <div class="flex items-center gap-4">
                                     <span class="text-sm font-bold text-blue-600">75%</span>
                                     <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-pasukan1"></i>
@@ -115,7 +134,7 @@
                         <div id="pasukan1" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-blue-500"></i>Senarai AJK (Jemputan & TOR)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-blue-500"></i>Senarai AJK </h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center p-2 bg-blue-50 rounded"><div class="w-8 h-8 rounded-full bg-blue-200 text-blue-700 flex justify-center items-center font-bold mr-3 text-sm">A</div><div><p class="text-sm font-bold text-slate-800">Dr. Halizah</p><p class="text-xs text-slate-500">Ketua Penyelaras, Penyediaan TOR & Draf Surat</p></div></div>
                                         
@@ -171,7 +190,7 @@
                         <div id="pasukan2" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-green-500"></i>Senarai AJK (5 Orang)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-green-500"></i>Senarai AJK </h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center p-2 bg-green-50 rounded hover:bg-green-100 transition"><div class="w-8 h-8 rounded-full bg-green-200 text-green-700 flex justify-center items-center font-bold mr-3 text-sm">F</div><div><p class="text-sm font-bold text-slate-800">Cik Ruran</p><p class="text-xs text-slate-500">Venue & Penyediaan Kertas Kerja</p></div></div>
 <div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">G</div><div><p class="text-sm font-bold text-slate-800">Cik Amirah</p><p class="text-xs text-slate-500">Pengurusan Tempat (Venue)</p></div></div>
@@ -226,7 +245,7 @@
                         <div id="pasukan3" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-purple-500"></i>Senarai AJK (4 Orang)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-purple-500"></i>Senarai AJK </h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center p-2 bg-purple-50 rounded hover:bg-purple-100 transition"><div class="w-8 h-8 rounded-full bg-purple-200 text-purple-700 flex justify-center items-center font-bold mr-3 text-sm">K</div><div><p class="text-sm font-bold text-slate-800">Encik Rahman</p><p class="text-xs text-slate-500">Ketua Sistem IT</p></div></div>
 <div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">L</div><div><p class="text-sm font-bold text-slate-800">Encik Aliff</p><p class="text-xs text-slate-500">Back End System</p></div></div>
@@ -268,7 +287,7 @@
                         <div id="pasukan4" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-orange-500"></i>Senarai AJK (3 Orang)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-orange-500"></i>Senarai AJK </h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center p-2 bg-orange-50 rounded hover:bg-orange-100 transition"><div class="w-8 h-8 rounded-full bg-orange-200 text-orange-700 flex justify-center items-center font-bold mr-3 text-sm">O</div><div><p class="text-sm font-bold text-slate-800">Encik Syahmir</p><p class="text-xs text-slate-500">Photographer & Video Rasmi</p></div></div>
 <div class="flex items-center p-2 bg-slate-50 rounded hover:bg-slate-100 transition"><div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex justify-center items-center font-bold mr-3 text-sm">P</div><div><p class="text-sm font-bold text-slate-800">Encik Alif</p><p class="text-xs text-slate-500">Photographer & Video Rasmi</p></div></div>
@@ -333,63 +352,125 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-8 shadow-sm">
-                    <h3 class="text-lg font-bold text-slate-700 mb-4"><i class="fas fa-user-plus mr-2 text-blue-500"></i>Borang Kemasukan Peserta (Admin)</h3>
-                    <form id="formPesertaDinamik" onsubmit="tambahPeserta(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Kategori Utama</label>
-                                <select id="inputKategoriUtama" onchange="kemasKiniSubKategori()" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm font-semibold text-slate-700">
-                                    <option value="">-- Pilih Kategori Agensi --</option>
-                                    <option value="KKM & JKN">KKM & Jabatan Kesihatan Negeri (JKN)</option>
-                                    <option value="Kementerian Luar">Kementerian Luar (KDN, MINDEF, dll)</option>
-                                    <option value="Fasiliti Kesihatan">Fasiliti Kesihatan Awam & Swasta</option>
-                                    <option value="Badan Profesional & Pakar">Badan Profesional & Pakar Industri</option>
-                                    <option value="Agensi Antarabangsa">Agensi Antarabangsa</option>
-                                </select>
+                <div class="bg-white rounded-xl border border-slate-200 mb-8 shadow-sm p-6 overflow-hidden relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fas fa-project-diagram mr-2 text-blue-500"></i>Peta Minda Taburan Agensi</h3>
+                        <span class="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100 shadow-sm"><i class="fas fa-mouse-pointer mr-1"></i>Boleh Diklik</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-6 italic border-b pb-4">Sila klik pada butang <strong>Kategori Utama</strong> di bawah untuk memaparkan senarai cabang/bahagian spesifik bagi pembentangan Pengarah.</p>
+                    
+                    <div class="flex flex-col items-center w-full pb-6" id="mind-map-container">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-gradient-to-br from-blue-800 to-blue-900 text-white font-black py-4 px-8 rounded-2xl shadow-lg border-2 border-blue-300 relative z-10 text-center w-48 transition transform hover:scale-105">
+                                <i class="fas fa-users text-2xl mb-1 opacity-80"></i><br>
+                                Sasaran 300 Pax
                             </div>
-                            
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Bahagian / Agensi Spesifik</label>
-                                <select id="inputSubKategori" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm disabled:bg-slate-100">
-                                    <option value="">-- Sila pilih kategori utama dahulu --</option>
-                                </select>
-                            </div>
+                            <div class="w-1 h-8 bg-slate-300 rounded-b-full"></div>
                         </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full relative pt-4 border-t-2 border-slate-300 rounded-t-xl mt-[-2px]" id="mind-map-branches">
+                            </div>
+                    </div>
+                </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="md:col-span-2">
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Nama Penuh</label>
-                                <input type="text" id="inputNamaDinamik" placeholder="Cth: Dr. Ali Bin Abu" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                <div class="bg-white rounded-xl border border-slate-200 mb-8 shadow-sm overflow-hidden">
+                    <div class="bg-slate-50 p-4 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fas fa-user-plus mr-2 text-blue-500"></i>Borang Kemasukan Peserta (Admin)</h3>
+                    </div>
+                    
+                    <form id="formPesertaDinamik" onsubmit="tambahPeserta(event)" class="flex flex-col">
+                        <div class="flex flex-col md:flex-row">
+                            
+                            <div class="w-full md:w-1/2 p-6 bg-blue-50/50 border-b md:border-b-0 md:border-r border-slate-200">
+                                <h4 class="text-xs font-bold text-blue-800 mb-5 uppercase tracking-wider"><i class="fas fa-sitemap mr-2"></i>1. Maklumat Agensi</h4>
+                                <div class="space-y-5">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Kategori Utama</label>
+                                        <select id="inputKategoriUtama" onchange="kemasKiniSubKategori()" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm font-semibold text-slate-700 shadow-sm transition cursor-pointer">
+                                            <option value="">-- Pilih Kategori Agensi --</option>
+                                            <option value="KKM">1) KKM (IPKKM, JKN, Hospital, PKD)</option>
+                                            <option value="Badan Kerajaan">2) Badan Kerajaan</option>
+                                            <option value="Exco Kesihatan Negeri">3) Exco Kesihatan Negeri</option>
+                                            <option value="NGO Tempatan">4) NGO Tempatan</option>
+                                            <option value="NGO Antarabangsa">5) NGO Antarabangsa</option>
+                                            <option value="Swasta (Bahagian Amalan)">6) Swasta (melalui Bahagian Amalan)</option>
+                                            <option value="Syarikat Management Swasta">7) Syarikat Management Swasta</option>
+                                            <option value="Insurance Company">8) Insurance Company</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Cabang / Bahagian Spesifik</label>
+                                        <select id="inputSubKategori" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm disabled:bg-slate-100 disabled:text-slate-400 shadow-sm transition cursor-pointer">
+                                            <option value="">-- Sila pilih kategori utama dahulu --</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Jawatan Utama</label>
-                                <input type="text" id="inputJawatanDinamik" placeholder="Cth: CDO / Pengarah" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Status</label>
-                                <select id="inputStatusDinamik" class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold">
-                                    <option value="Disahkan">Disahkan</option>
-                                    <option value="Menunggu">Menunggu</option>
-                                </select>
+
+                            <div class="w-full md:w-1/2 p-6 bg-white">
+                                <h4 class="text-xs font-bold text-slate-600 mb-5 uppercase tracking-wider"><i class="fas fa-id-card mr-2"></i>2. Butiran Peserta</h4>
+                                <div class="space-y-5">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Nama Penuh</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"><i class="fas fa-user text-slate-400 text-sm"></i></div>
+                                            <input type="text" id="inputNamaDinamik" placeholder="Cth: Dr. Ali Bin Abu" required class="w-full pl-10 p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Jawatan Utama</label>
+                                            <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"><i class="fas fa-briefcase text-slate-400 text-sm"></i></div>
+                                                <input type="text" id="inputJawatanDinamik" placeholder="Cth: Pengarah" required class="w-full pl-10 p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Status Kehadiran</label>
+                                            <select id="inputStatusDinamik" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold shadow-sm transition cursor-pointer text-slate-700">
+                                                <option value="Disahkan">✅ Disahkan</option>
+                                                <option value="Menunggu">⏳ Menunggu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="flex justify-end pt-2">
-                            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700 transition shadow-md"><i class="fas fa-save mr-2"></i> Simpan ke Pangkalan Data</button>
+                        <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end items-center">
+                            <span class="text-xs text-slate-400 mr-4 hidden md:block">Sila pastikan maklumat di atas tepat sebelum menyimpan.</span>
+                            <button type="submit" class="bg-blue-600 text-white font-bold py-2.5 px-6 rounded-lg hover:bg-blue-700 transition-all shadow hover:shadow-lg flex items-center">
+                                <i class="fas fa-save mr-2"></i> Simpan Maklumat
+                            </button>
                         </div>
                     </form>
                 </div>
 
-                <h3 class="text-xl font-bold text-slate-700 mb-3"><i class="fas fa-list-alt mr-2 text-blue-500"></i>Senarai Terperinci Mengikut Agensi</h3>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4 mt-8">
+                    <h3 class="text-xl font-bold text-slate-700"><i class="fas fa-list-alt mr-2 text-blue-500"></i>Senarai Terperinci Mengikut Agensi</h3>
+                    
+                    <div class="relative w-full md:w-1/3">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-slate-400"></i>
+                        </div>
+                        <input type="text" id="carianPeserta" onkeyup="paparJadualBerkumpulan()" placeholder="Cari nama, agensi, atau status..." class="w-full pl-10 p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                    </div>
+                </div>
+                
                 <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm" id="jadualBerkumpulanContainer">
                     </div>
             </div>
 
             <div id="checklist" class="tab-content bg-white rounded-xl shadow-md p-8 border border-slate-100">
                 <div id="checklist-main-view" class="fade-in">
-                    <h2 class="text-3xl font-bold text-slate-800 border-b pb-4 mb-6">Senarai Semak (Checklist) Keseluruhan</h2>
-                    <p class="text-sm text-slate-500 mb-6"><i class="fas fa-info-circle mr-1"></i>Klik butang <strong>"👁️ Perincian"</strong> untuk melihat tugasan terperinci dan Person in Charge (PIC).</p>
+                    <div class="flex justify-between items-center border-b pb-4 mb-6 gap-4">
+                        <h2 class="text-3xl font-bold text-slate-800">Senarai Semak (Checklist) Keseluruhan</h2>
+                        <div class="bg-green-50 border border-green-200 px-5 py-2 rounded-xl text-center shadow-sm flex-shrink-0">
+                            <p class="text-xs font-bold text-green-700 uppercase tracking-wider mb-1">Progres Keseluruhan</p>
+                            <h3 class="text-3xl font-black text-green-600" id="progress-checklist-header">0%</h3>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6"><i class="fas fa-info-circle mr-1"></i>Klik pada mana-mana baris tugasan untuk melihat perincian dan Person in Charge (PIC).</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="checklist-grid">
                         </div>
@@ -430,7 +511,11 @@
 
                 <div class="relative pt-4 pb-8">
                     
-                    <div class="absolute top-10 left-10 md:left-24 right-10 md:right-24 h-1 bg-slate-200 hidden md:block" style="top: 2.5rem; z-index: 0;"></div>
+                    <div class="absolute left-10 md:left-24 right-10 md:right-24 h-1.5 bg-slate-200 hidden md:block rounded-full" style="top: 2.5rem; z-index: 0;">
+                        <div id="timeline-progress-bar" class="h-full bg-blue-500 rounded-full transition-all duration-1000 ease-out relative" style="width: 0%;">
+                            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-white border-4 border-blue-500 rounded-full shadow-md"></div>
+                        </div>
+                    </div>
                     
                     <div class="flex flex-col md:flex-row justify-between w-full gap-8 relative z-10">
                         
@@ -526,11 +611,14 @@
 
         // --- DATA STRUKTUR SUB-KATEGORI (DATABASE REFERENCE) ---
         const dataSubKategori = {
-            "KKM & JKN": ["Bahagian Perancangan Kesihatan (HPU)", "Bahagian Perkembangan Perubatan (BPP)", "Bahagian Kesihatan Awam (BKA)", "Bahagian Pengurusan Maklumat (BPM)", "Jabatan Kesihatan Negeri (JKN) Selangor", "Jabatan Kesihatan Negeri (JKN) Johor", "JKN Negeri Lain-Lain"],
-            "Kementerian Luar": ["MOHE (KPT)", "MINDEF (Kementah)", "KDN", "Kementerian Kewangan (MOF)", "Kementerian Digital", "MAMPU / JDN"],
-            "Fasiliti Kesihatan": ["Hospital Awam (KKM)", "Klinik Kesihatan (KK)", "IHH Healthcare", "KPJ Healthcare", "Sunway Medical", "Klinik Swasta"],
-            "Badan Profesional & Pakar": ["Malaysian Medical Council (MMC)", "Malaysian Medical Association (MMA)", "PwC", "Deloitte", "McKinsey", "SME Teknologi Kesihatan"],
-            "Agensi Antarabangsa": ["WHO", "UNDP", "World Bank", "UNICEF"]
+            "KKM": ["Ibu Pejabat KKM (IPKKM)", "Jabatan Kesihatan Negeri (JKN)", "Hospital KKM", "Pejabat Kesihatan Daerah (PKD)"],
+            "Badan Kerajaan": ["Kementerian Pendidikan Tinggi (MOHE)", "Kementerian Pertahanan (MINDEF)", "Jabatan Digital Negara (JDN)", "Pejabat Ketua Pegawai Keselamatan Kerajaan (CGSO)", "Lain-lain Agensi / Kementerian"],
+            "Exco Kesihatan Negeri": ["Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor", "Terengganu"],
+            "NGO Tempatan": ["Persatuan Perubatan Malaysia (MMA)", "MERCY Malaysia", "Persatuan Bulan Sabit Merah Malaysia (PBSM)", "Lain-lain NGO Tempatan"],
+            "NGO Antarabangsa": ["Pertubuhan Kesihatan Sedunia (WHO)", "Doctors Without Borders (MSF)", "Lain-lain NGO Antarabangsa"],
+            "Swasta (Bahagian Amalan)": ["Hospital Swasta", "Klinik Perubatan Swasta", "Klinik Pergigian Swasta", "Pusat Jagaan Kesihatan Swasta"],
+            "Syarikat Management Swasta": ["PWC", "Deloitte", "EY", "KPMG", "McKinsey & Company", "Lain-lain Syarikat Perunding"],
+            "Insurance Company": ["AIA", "Prudential", "Great Eastern", "Allianz", "Etiqa", "Lain-lain Syarikat Insurans"]
         };
 
         // --- FUNGSI LOCAL STORAGE PESERTA & AUTO CALCULATE ---
@@ -572,46 +660,77 @@
                 return;
             }
 
+            // --- FUNGSI CARIAN (SEARCH) ---
+            const kotakCarian = document.getElementById('carianPeserta');
+            const carian = kotakCarian ? kotakCarian.value.toLowerCase() : "";
+            
+            // Tapis data berdasarkan carian dan kekalkan ID/Index asal
+            const dataDitapis = senaraiPeserta.map((peserta, index) => {
+                return { ...peserta, originalIndex: index }; 
+            }).filter(p => 
+                p.nama.toLowerCase().includes(carian) || 
+                p.subKategori.toLowerCase().includes(carian) || 
+                p.kategoriUtama.toLowerCase().includes(carian) ||
+                p.jawatan.toLowerCase().includes(carian) ||
+                p.status.toLowerCase().includes(carian)
+            );
+
+            if(dataDitapis.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-500 bg-slate-50">Tiada padanan carian ditemui. Sila cuba kata kunci lain.</div>';
+                return;
+            }
+
             // Kumpulkan (Group) peserta mengikut Kategori Utama
             const groupedData = {};
-            senaraiPeserta.forEach((peserta, index) => {
+            dataDitapis.forEach((peserta) => {
                 if(!groupedData[peserta.kategoriUtama]) {
                     groupedData[peserta.kategoriUtama] = [];
                 }
-                peserta.originalIndex = index; // simpan index untuk delete nanti
                 groupedData[peserta.kategoriUtama].push(peserta);
             });
 
-            // Render Jadual
+            // Render Jadual dengan Fungsi Inline-Edit
             let htmlJadual = '<table class="w-full text-left border-collapse text-sm"><tbody class="text-slate-600">';
             
             for (const [kategoriUtama, senarai] of Object.entries(groupedData)) {
                 // Header Kategori
                 htmlJadual += `
                     <tr class="bg-blue-900 text-white">
-                        <td colspan="5" class="p-3 font-bold uppercase tracking-wide text-xs"><i class="fas fa-layer-group mr-2"></i>${kategoriUtama} (${senarai.length} Pax)</td>
+                        <td colspan="5" class="p-3 font-bold uppercase tracking-wide text-xs"><i class="fas fa-layer-group mr-2"></i>${kategoriUtama} <span class="bg-blue-800 px-2 py-0.5 rounded-full ml-1">${senarai.length} Pax</span></td>
                     </tr>
                     <tr class="bg-slate-100 text-slate-700 font-bold text-xs uppercase">
-                        <td class="p-2 border-b w-1/3">Bahagian / Agensi</td>
-                        <td class="p-2 border-b">Nama Peserta</td>
-                        <td class="p-2 border-b">Jawatan</td>
-                        <td class="p-2 border-b text-center">Status</td>
-                        <td class="p-2 border-b text-center">Tindakan</td>
+                        <td class="p-3 border-b w-1/4">Bahagian / Agensi</td>
+                        <td class="p-3 border-b w-1/4">Nama Peserta <i class="fas fa-pencil-alt text-[10px] text-slate-400 ml-1" title="Boleh diedit"></i></td>
+                        <td class="p-3 border-b w-1/4">Jawatan <i class="fas fa-pencil-alt text-[10px] text-slate-400 ml-1" title="Boleh diedit"></i></td>
+                        <td class="p-3 border-b w-1/6 text-center">Status <i class="fas fa-caret-down text-[10px] text-slate-400 ml-1"></i></td>
+                        <td class="p-3 border-b text-center">Tindakan</td>
                     </tr>
                 `;
 
-                // Data Peserta di bawah kategori tersebut
+                // Data Peserta
                 senarai.forEach(p => {
-                    let badgeColor = p.status === "Disahkan" ? "bg-green-100 text-green-700 border-green-200" : "bg-orange-100 text-orange-700 border-orange-200";
+                    let isDisahkan = p.status === "Disahkan";
+                    let badgeBg = isDisahkan ? "bg-green-50" : "bg-orange-50";
+                    let textColor = isDisahkan ? "text-green-700" : "text-orange-700";
+                    let badgeBorder = isDisahkan ? "border-green-200" : "border-orange-200";
                     
                     htmlJadual += `
-                        <tr class="border-b hover:bg-slate-50 bg-white">
-                            <td class="p-3 font-semibold text-slate-800 border-r bg-slate-50">${p.subKategori}</td>
-                            <td class="p-3 font-bold">${p.nama}</td>
-                            <td class="p-3 text-xs">${p.jawatan}</td>
-                            <td class="p-3 text-center"><span class="${badgeColor} px-2 py-1 rounded text-[10px] font-bold border uppercase">${p.status}</span></td>
-                            <td class="p-3 text-center">
-                                <button onclick="padamPeserta(${p.originalIndex})" class="text-red-400 hover:text-red-600 transition" title="Padam">
+                        <tr class="border-b hover:bg-slate-50 bg-white transition group">
+                            <td class="p-2 font-semibold text-slate-800 border-r bg-slate-50 text-xs px-3">${p.subKategori}</td>
+                            <td class="p-2 px-3">
+                                <input type="text" value="${p.nama}" onchange="kemasKiniPeserta(${p.originalIndex}, 'nama', this.value)" class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-500 focus:bg-white rounded px-2 py-1 outline-none font-bold text-slate-800 transition" title="Klik untuk edit nama">
+                            </td>
+                            <td class="p-2 px-3">
+                                <input type="text" value="${p.jawatan}" onchange="kemasKiniPeserta(${p.originalIndex}, 'jawatan', this.value)" class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-500 focus:bg-white rounded px-2 py-1 outline-none text-xs text-slate-600 transition" title="Klik untuk edit jawatan">
+                            </td>
+                            <td class="p-2 text-center px-3">
+                                <select onchange="kemasKiniPeserta(${p.originalIndex}, 'status', this.value)" class="w-full ${badgeBg} ${textColor} text-[11px] font-bold border ${badgeBorder} hover:border-slate-400 rounded px-1 py-1.5 outline-none uppercase cursor-pointer transition text-center shadow-sm">
+                                    <option value="Disahkan" ${isDisahkan ? 'selected' : ''}>✅ Disahkan</option>
+                                    <option value="Menunggu" ${!isDisahkan ? 'selected' : ''}>⏳ Menunggu</option>
+                                </select>
+                            </td>
+                            <td class="p-2 text-center">
+                                <button onclick="padamPeserta(${p.originalIndex})" class="text-slate-300 hover:text-red-500 transition px-2 hover:bg-red-50 rounded-full py-1" title="Padam">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -622,6 +741,20 @@
 
             htmlJadual += '</tbody></table>';
             container.innerHTML = htmlJadual;
+        }
+
+        // FUNGSI BAHARU: Kemas kini data terus ke sistem (Inline Edit Database)
+        function kemasKiniPeserta(index, field, value) {
+            // Ubah nilai objek pada index yang tepat
+            senaraiPeserta[index][field] = value;
+            
+            // Simpan ke database (Local Storage)
+            localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
+            
+            // Refresh jadual untuk mengemaskini warna status badge (jika status yang diubah)
+            if(field === 'status') {
+                paparJadualBerkumpulan();
+            }
         }
 
         function tambahPeserta(event) {
@@ -977,11 +1110,10 @@
             let sumPeratus = 0;
             
             checklistData.forEach(item => {
-                // Ambil progres percentage individu
                 sumPeratus += countItemProgress(item);
             });
             
-            // Kira purata dari 15 item tersebut
+            // Kira purata keseluruhan untuk papan pemuka
             const overallPeratus = Math.round(sumPeratus / totalItems);
             
             const dashProg = document.getElementById('progress-dashboard');
@@ -989,6 +1121,34 @@
 
             const timeProg = document.getElementById('progress-timeline');
             if(timeProg) timeProg.innerText = overallPeratus + '%';
+
+            const checklistHeaderProg = document.getElementById('progress-checklist-header');
+            if(checklistHeaderProg) checklistHeaderProg.innerText = overallPeratus + '%';
+
+            // KIRA PERGERAKAN PALANG ANIMASI TIMELINE
+            if(typeof dataChecklistFasa !== 'undefined') {
+                let praSum = 0;
+                dataChecklistFasa['pra'].forEach(id => {
+                    const item = checklistData.find(d => d.id === id);
+                    if(item) praSum += countItemProgress(item);
+                });
+                const praPeratus = praSum / dataChecklistFasa['pra'].length; // Purata peratus Fasa 1 (0-100)
+
+                let semasaSum = 0;
+                dataChecklistFasa['semasa'].forEach(id => {
+                    const item = checklistData.find(d => d.id === id);
+                    if(item) semasaSum += countItemProgress(item);
+                });
+                const semasaPeratus = semasaSum / dataChecklistFasa['semasa'].length; // Purata peratus Fasa 2 (0-100)
+                
+                // Formula: 50% bar pertama dikawal oleh Fasa 1, 50% kedua dikawal oleh Fasa 2.
+                const timelineBarWidth = (praPeratus * 0.5) + (semasaPeratus * 0.5);
+                
+                const timelineBar = document.getElementById('timeline-progress-bar');
+                if(timelineBar) {
+                    timelineBar.style.width = timelineBarWidth + '%';
+                }
+            }
         }
 
         // --- FUNGSI TIMELINE FASA CHECKLIST ---
@@ -1175,11 +1335,147 @@
             });
         }
 
+        // --- FUNGSI KALENDAR & TARIKH MASA NYATA ---
+        let tarikhHarini = new Date();
+        let calBulan = tarikhHarini.getMonth(); // 0-11
+        let calTahun = tarikhHarini.getFullYear();
+
+        function kemasKiniTarikhHeader() {
+            const pilihanFormat = { day: 'numeric', month: 'long', year: 'numeric' };
+            const formatTarikh = new Date().toLocaleDateString('ms-MY', pilihanFormat);
+            document.getElementById('tarikh-semasa-header').innerText = formatTarikh;
+        }
+
+        function renderKalendar() {
+            const grid = document.getElementById('kalendar-grid');
+            const tajuk = document.getElementById('kalendar-bulan-tahun');
+            grid.innerHTML = '';
+
+            const senaraiBulan = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+            tajuk.innerText = `${senaraiBulan[calBulan]} ${calTahun}`;
+
+            // Dapatkan hari pertama dalam bulan tersebut (0 = Ahad, 1 = Isnin...)
+            const hariPertama = new Date(calTahun, calBulan, 1).getDay();
+            // Dapatkan jumlah hari dalam bulan tersebut
+            const jumlahHari = new Date(calTahun, calBulan + 1, 0).getDate();
+            const harini = new Date();
+
+            // Masukkan kotak kosong untuk hari sebelum 1 haribulan
+            for (let i = 0; i < hariPertama; i++) {
+                grid.innerHTML += `<div class="p-1"></div>`;
+            }
+
+            // Masukkan tarikh (1 sehingga hujung bulan)
+            for (let i = 1; i <= jumlahHari; i++) {
+                let kelasTambahan = "hover:bg-slate-100 hover:text-blue-600 rounded cursor-pointer transition font-medium py-1";
+                
+                // Warnakan tarikh bengkel (19, 20, 21 Mei 2026)
+                if (calBulan === 4 && calTahun === 2026 && (i === 19 || i === 20 || i === 21)) {
+                    kelasTambahan = "bg-red-50 text-red-600 font-bold border border-red-200 rounded shadow-sm";
+                }
+                
+                // Warnakan harini (Tindih warna jika harini adalah hari bengkel)
+                if (i === harini.getDate() && calBulan === harini.getMonth() && calTahun === harini.getFullYear()) {
+                    kelasTambahan = "bg-blue-600 text-white font-bold rounded shadow-md hover:bg-blue-700";
+                }
+
+                grid.innerHTML += `<div class="${kelasTambahan}">${i}</div>`;
+            }
+        }
+
+        function tukarBulan(offset) {
+            calBulan += offset;
+            if (calBulan < 0) {
+                calBulan = 11;
+                calTahun--;
+            } else if (calBulan > 11) {
+                calBulan = 0;
+                calTahun++;
+            }
+            renderKalendar();
+        }
+
+        // --- FUNGSI PETA MINDA (MIND MAP) INTERAKTIF ---
+        function renderMindMap() {
+            const container = document.getElementById('mind-map-branches');
+            if(!container) return;
+            
+            let html = '';
+            Object.keys(dataSubKategori).forEach((kategori, index) => {
+                const subItems = dataSubKategori[kategori];
+                const subItemsHtml = subItems.map(sub => 
+                    `<div class="bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-semibold py-2 px-3 rounded-lg shadow-sm hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all cursor-default flex items-start text-left w-full">
+                        <i class="fas fa-caret-right text-blue-400 mt-0.5 mr-2"></i> <span>${sub}</span>
+                    </div>`
+                ).join('');
+
+                html += `
+                    <div class="flex flex-col items-center relative w-full mt-2">
+                        <div class="absolute -top-4 w-1 h-4 bg-slate-300 hidden md:block"></div>
+
+                        <button onclick="toggleMindMapNode('node-${index}')" class="w-full bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-blue-800 font-bold text-sm py-3 px-4 rounded-xl shadow-sm border border-slate-200 hover:border-blue-300 transition-all relative z-10 flex flex-col items-center justify-center text-center h-full min-h-[4rem]">
+                            <span>${kategori}</span>
+                            <i class="fas fa-chevron-down mt-2 text-slate-400 transition-transform duration-300" id="icon-node-${index}"></i>
+                        </button>
+                        
+                        <div id="node-${index}" class="hidden flex-col gap-2 w-full mt-2 opacity-0 transition-all duration-300 transform -translate-y-2">
+                            ${subItemsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function toggleMindMapNode(id) {
+            const node = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if(node.classList.contains('hidden')) {
+                // Animasi Buka (Turun ke bawah)
+                node.classList.remove('hidden');
+                void node.offsetWidth; 
+                node.classList.remove('opacity-0', '-translate-y-2');
+                node.classList.add('opacity-100', 'translate-y-0', 'flex');
+                
+                // Tukar Warna Butang
+                icon.parentElement.classList.replace('bg-slate-100', 'bg-blue-600');
+                icon.parentElement.classList.replace('text-slate-700', 'text-white');
+                icon.parentElement.classList.replace('hover:bg-blue-100', 'hover:bg-blue-700');
+                icon.parentElement.classList.replace('hover:text-blue-800', 'hover:text-white');
+                icon.classList.replace('text-slate-400', 'text-white');
+                
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            } else {
+                // Animasi Tutup
+                node.classList.remove('opacity-100', 'translate-y-0');
+                node.classList.add('opacity-0', '-translate-y-2');
+                
+                // Kembali ke warna asal
+                icon.parentElement.classList.replace('bg-blue-600', 'bg-slate-100');
+                icon.parentElement.classList.replace('text-white', 'text-slate-700');
+                icon.parentElement.classList.replace('hover:bg-blue-700', 'hover:bg-blue-100');
+                icon.parentElement.classList.replace('hover:text-white', 'hover:text-blue-800');
+                icon.classList.replace('text-white', 'text-slate-400');
+
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                
+                setTimeout(() => {
+                    node.classList.add('hidden');
+                    node.classList.remove('flex');
+                }, 300);
+            }
+        }
+
+        // --- MENGGERAKKAN KESEMUA SISTEM KETIKA LAMAN DIBUKA ---
         window.onload = function() {
             paparJadualBerkumpulan();
             renderChecklistMain();
-            renderSemuaAJK();        // Render AJK Dinamik (Boleh tambah/padam)
-            formatTugasanSpesifik(); // Format senarai tepi (Buang checkbox)
+            renderSemuaAJK();        
+            formatTugasanSpesifik(); 
+            kemasKiniTarikhHeader(); // Aktifkan tarikh header
+            renderKalendar();        // Render bentuk kalendar
+            renderMindMap();         // Render Peta Minda Interaktif
         };
 
         const senaraiAJK = {
