@@ -148,7 +148,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-blue-500"></i>Tugasan Spesifik (4 Checklist)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-blue-500"></i>Tugasan Spesifik </h4>
                                     <div class="space-y-2" onclick="event.stopPropagation() /* Elak panel tertutup bila klik checkbox */">
                                         <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
                                             <input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1" checked>
@@ -199,7 +199,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-green-500"></i>Tugasan Spesifik (5 Checklist)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-green-500"></i>Tugasan Spesifik </h4>
                                     <div class="space-y-2" onclick="event.stopPropagation()">
                                         <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
                                             <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1">
@@ -253,7 +253,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-purple-500"></i>Tugasan Spesifik (2 Checklist)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-purple-500"></i>Tugasan Spesifik </h4>
                                     <div class="space-y-2" onclick="event.stopPropagation()">
                                         <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
                                             <input type="checkbox" class="w-4 h-4 text-purple-600 rounded mt-1">
@@ -297,7 +297,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-orange-500"></i>Tugasan Spesifik (4 Checklist)</h4>
+                                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-orange-500"></i>Tugasan Spesifik </h4>
                                     <div class="space-y-2" onclick="event.stopPropagation()">
                                         <label class="flex items-start p-2 border border-slate-200 rounded hover:bg-slate-50 transition cursor-pointer">
                                             <input type="checkbox" class="w-4 h-4 text-orange-600 rounded mt-1">
@@ -854,14 +854,6 @@
             document.getElementById('checklist-main-view').classList.remove('hidden');
         }
 
-        // Peta Hubungan: ID Checklist kepada Kumpulan AJK (Pasukan)
-        const pemetaanItemKePasukan = {
-            1: 'pasukan1', 2: 'pasukan1', 3: 'pasukan1', 11: 'pasukan1',
-            4: 'pasukan2', 5: 'pasukan2', 8: 'pasukan2', 9: 'pasukan2', 10: 'pasukan2',
-            6: 'pasukan3', 7: 'pasukan3',
-            12: 'pasukan4', 13: 'pasukan4', 14: 'pasukan4', 15: 'pasukan4'
-        };
-
         function openItemDetail(id) {
             const item = checklistData.find(d => d.id === id);
             const peratus = countItemProgress(item);
@@ -869,7 +861,7 @@
             document.getElementById('detail-title').innerText = item.title;
             
             // Dapatkan senarai nama AJK secara dinamik berdasarkan pasukan
-            const idPasukan = pemetaanItemKePasukan[id];
+            const idPasukan = window.pemetaanItemKePasukan[id];
             let senaraiNamaPIC = item.pic; // Default nama dari checklistData
             
             if (idPasukan && window.dataAJK && window.dataAJK[idPasukan]) {
@@ -1268,28 +1260,90 @@
             }
         }
 
-        // --- FUNGSI BUANG CHECKBOX TUGASAN SPESIFIK ---
-        function formatTugasanSpesifik() {
-            ['pasukan1', 'pasukan2', 'pasukan3', 'pasukan4'].forEach(p => {
-                const containers = document.querySelectorAll(`#${p} .space-y-2`);
-                if(containers.length > 1) {
-                    const tugasanContainer = containers[1]; // Ruangan checklist di sebelah kanan
-                    const inputs = tugasanContainer.querySelectorAll('input[type="checkbox"]');
-                    
-                    inputs.forEach(input => {
-                        const label = input.parentElement;
-                        label.className = "flex items-start p-3 border border-slate-200 rounded-lg bg-slate-50 mb-2 shadow-sm"; // Buang pointer hover
-                        
-                        const span = label.querySelector('span');
-                        if(span) {
-                            span.className = "ml-3 text-sm font-medium text-slate-700";
-                            span.insertAdjacentHTML('beforebegin', '<i class="fas fa-check-circle text-blue-500 mt-0.5 text-lg"></i>'); // Tukar kepada ikon bullet
-                        }
-                        input.remove(); // Padam kotak tick
-                    });
-                    tugasanContainer.removeAttribute('onclick'); // Padam fungsi event click
-                }
+        // --- DATA PEMETAAN TUGASAN & AGIHAN DINAMIK ---
+        window.lalaiPemetaan = {
+            1: 'pasukan1', 2: 'pasukan1', 3: 'pasukan1', 11: 'pasukan1',
+            4: 'pasukan2', 5: 'pasukan2', 8: 'pasukan2', 9: 'pasukan2', 10: 'pasukan2',
+            6: 'pasukan3', 7: 'pasukan3',
+            12: 'pasukan4', 13: 'pasukan4', 14: 'pasukan4', 15: 'pasukan4'
+        };
+        window.pemetaanItemKePasukan = window.pemetaanItemKePasukan || window.lalaiPemetaan;
+
+        function renderTugasanPasukan() {
+            const pasukanIds = ['pasukan1', 'pasukan2', 'pasukan3', 'pasukan4'];
+            const warnaTema = { 'pasukan1':'blue', 'pasukan2':'green', 'pasukan3':'purple', 'pasukan4':'orange' };
+
+            pasukanIds.forEach(idPasukan => {
+                const containers = document.querySelectorAll(`#${idPasukan} .grid > div`);
+                if(containers.length < 2) return;
+                const container = containers[1]; // Target kolum kanan (tempat tugasan spesifik)
+                
+                const assignedItems = checklistData.filter(item => window.pemetaanItemKePasukan[item.id] === idPasukan);
+                const warna = warnaTema[idPasukan];
+
+                let html = `
+                    <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-tasks mr-2 text-${warna}-500"></i>Tugasan Spesifik (${assignedItems.length} Checklist)</h4>
+                    <div class="space-y-2" onclick="event.stopPropagation()">
+                `;
+
+                // 1. Bina Senarai Tugasan Semasa (Buang Nombor & Boleh Diklik)
+                assignedItems.forEach(item => {
+                    const tajukBersih = item.title.replace(/^\d+\.\s*/, ''); // Regex buang nombor
+                    html += `
+                        <div class="flex items-center justify-between p-2 border border-slate-200 rounded hover:bg-slate-50 transition shadow-sm group bg-white">
+                            <div class="flex items-center flex-1 cursor-pointer" onclick="lompatKePerincianChecklist(${item.id})" title="Klik untuk lihat perincian tugasan">
+                                <i class="fas fa-check-circle text-${warna}-500 mr-2 text-lg"></i>
+                                <span class="text-sm font-medium text-slate-700 group-hover:text-${warna}-600 transition">${tajukBersih}</span>
+                            </div>
+                            <button onclick="buangTugasanPasukan(${item.id})" class="text-slate-300 hover:text-red-500 px-2 py-1 transition transform hover:scale-110" title="Buang tugasan ini">
+                                <i class="fas fa-minus-circle"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+
+                // 2. Ruang "Tambah Tugasan" (+ Dropdown)
+                const unassignedItems = checklistData.filter(item => window.pemetaanItemKePasukan[item.id] !== idPasukan);
+                let optionsHtml = '<option value="">+ Tambah / Alih Tugasan Ke Sini...</option>';
+                unassignedItems.forEach(item => {
+                     optionsHtml += `<option value="${item.id}">${item.title}</option>`;
+                });
+
+                html += `
+                    </div>
+                    <div class="mt-3 flex items-center gap-2" onclick="event.stopPropagation()">
+                        <select id="tambah-tugasan-${idPasukan}" class="w-full p-2 border border-slate-300 rounded text-xs outline-none focus:border-${warna}-400 shadow-sm cursor-pointer bg-white">
+                            ${optionsHtml}
+                        </select>
+                        <button onclick="tambahTugasanPasukan('${idPasukan}')" class="bg-slate-100 hover:bg-${warna}-100 text-${warna}-600 px-3 py-2 rounded font-bold transition border border-slate-200 hover:border-${warna}-300 shadow-sm" title="Tambah Tugasan">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                `;
+                container.innerHTML = html;
             });
+        }
+
+        // FUNGSI BANTUAN INTERAKTIF
+        function lompatKePerincianChecklist(id) {
+            openTab('checklist'); // Lompat ke tab Checklist
+            setTimeout(() => { openItemDetail(id); }, 150); // Buka panel detail
+        }
+
+        function buangTugasanPasukan(itemId) {
+            delete window.pemetaanItemKePasukan[itemId];
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            else renderTugasanPasukan(); // Fallback jika offline
+        }
+
+        function tambahTugasanPasukan(idPasukan) {
+            const selectEl = document.getElementById(`tambah-tugasan-${idPasukan}`);
+            const itemId = parseInt(selectEl.value);
+            if(itemId) {
+                window.pemetaanItemKePasukan[itemId] = idPasukan;
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+                else renderTugasanPasukan();
+            }
         }
 
         // --- FUNGSI KALENDAR & TARIKH MASA NYATA ---
@@ -1429,7 +1483,7 @@
             paparJadualBerkumpulan();
             renderChecklistMain();
             renderSemuaAJK();        
-            formatTugasanSpesifik(); 
+            renderTugasanPasukan(); 
             kemasKiniTarikhHeader(); // Aktifkan tarikh header
             renderKalendar();        // Render bentuk kalendar
             renderMindMap();         // Render Peta Minda Interaktif
@@ -1555,7 +1609,7 @@
         }
     });
 
-    // 2. JAMBATAN DATA CHECKLIST, PROGRESS & AJK KESELURUHAN
+    // 2. JAMBATAN DATA CHECKLIST, PROGRESS, AJK & PEMETAAN TUGASAN
     window.simpanDataUtamaKeCloud = async function() {
         try {
             await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
@@ -1563,7 +1617,8 @@
                 savedRemark: window.savedRemark || {},
                 savedFiles: window.savedFiles || {},
                 savedLogs: window.savedLogs || {},
-                dataAJK: window.dataAJK || window.lalaiDataAJK // Simpan AJK ke cloud
+                dataAJK: window.dataAJK || window.lalaiDataAJK,
+                pemetaanTugasan: window.pemetaanItemKePasukan || window.lalaiPemetaan
             });
         } catch(e) {
             console.error("Firebase Gagal Menyimpan:", e);
@@ -1576,11 +1631,13 @@
             window.savedRemark = data.savedRemark || {};
             window.savedFiles = data.savedFiles || {};
             window.savedLogs = data.savedLogs || {};
-            window.dataAJK = data.dataAJK || window.lalaiDataAJK; // Baca AJK dari cloud
+            window.dataAJK = data.dataAJK || window.lalaiDataAJK;
+            window.pemetaanItemKePasukan = data.pemetaanTugasan || window.lalaiPemetaan;
 
             // Auto-refresh UI secara live
             if(typeof renderChecklistMain === "function") renderChecklistMain();
             if(typeof renderSemuaAJK === "function") renderSemuaAJK(); 
+            if(typeof renderTugasanPasukan === "function") renderTugasanPasukan();
 
             // Kemas kini tetingkap perincian jika sedang dibuka
             const detailView = document.getElementById('checklist-detail-view');
