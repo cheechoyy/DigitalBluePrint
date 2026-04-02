@@ -59,8 +59,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div onclick="openTab('stakeholders')" class="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center cursor-pointer hover:bg-blue-100 hover:shadow-md transition transform hover:-translate-y-1">
                         <i class="fas fa-users text-4xl text-blue-600 mb-3"></i>
-                        <h3 class="text-2xl font-bold text-blue-900">250</h3>
-                        <p class="text-sm text-blue-700 font-medium">Sasaran Peserta <br><span class="text-xs font-normal">(Klik untuk lihat senarai)</span></p>
+                        <h3 class="text-4xl font-black text-blue-900" id="total-dashboard-pax">0</h3>
+                        <p class="text-sm text-blue-800 font-bold mt-1">Telah Didaftarkan</p>
+                        <p class="text-xs text-blue-600 font-medium mt-1">Anggaran: 250 ~ 300 Kehadiran</p>
+                        <p class="text-[10px] text-blue-400 mt-2 italic">(Klik untuk lihat senarai)</p>
                     </div>
                     
                     <div class="bg-green-50 border border-green-200 p-6 rounded-xl text-center">
@@ -560,6 +562,10 @@
 
             // Update Total Pax Count
             document.getElementById('total-pax-display').innerText = senaraiPeserta.length;
+            
+            // Update Pax Count di Dashboard (Ringkasan Eksekutif)
+            const dashPax = document.getElementById('total-dashboard-pax');
+            if(dashPax) dashPax.innerText = senaraiPeserta.length;
 
             if(senaraiPeserta.length === 0) {
                 container.innerHTML = '<div class="p-8 text-center text-slate-500 bg-slate-50">Tiada data peserta dimasukkan lagi. Sila tambah di atas.</div>';
@@ -700,13 +706,12 @@
                             <div class="p-2 ${progressColor} border rounded mr-3 text-center w-16 h-12 flex justify-center items-center font-black">
                                 <span class="text-xl">${peratus}%</span>
                             </div>
-                            <div class="flex items-center group-hover:text-blue-600 transition truncate">
-                                <i class="fas fa-edit text-slate-300 group-hover:text-blue-400 mr-2 transition-colors"></i>
+                            <div class="flex items-center group-hover:text-blue-600 transition truncate pl-1">
                                 <span class="font-medium text-slate-700 truncate">${item.title}</span>
                             </div>
                         </div>
-                        <button class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 px-3 py-1 rounded text-sm font-semibold transition border border-transparent hover:border-blue-200">
-                            Edit <i class="fas fa-chevron-right ml-1"></i>
+                        <button class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-blue-200 shadow-sm bg-white group-hover:bg-transparent" title="Edit Perincian">
+                            <i class="fas fa-edit text-lg"></i>
                         </button>
                     </div>
                 `;
@@ -721,20 +726,46 @@
             document.getElementById('checklist-main-view').classList.remove('hidden');
         }
 
+        // Peta Hubungan: ID Checklist kepada Kumpulan AJK (Pasukan)
+        const pemetaanItemKePasukan = {
+            1: 'pasukan1', 2: 'pasukan1', 3: 'pasukan1', 11: 'pasukan1',
+            4: 'pasukan2', 5: 'pasukan2', 8: 'pasukan2', 9: 'pasukan2', 10: 'pasukan2',
+            6: 'pasukan3', 7: 'pasukan3',
+            12: 'pasukan4', 13: 'pasukan4', 14: 'pasukan4', 15: 'pasukan4'
+        };
+
         function openItemDetail(id) {
             const item = checklistData.find(d => d.id === id);
             const peratus = countItemProgress(item);
             
             document.getElementById('detail-title').innerText = item.title;
-            document.getElementById('detail-pic').innerText = item.pic;
             
-            // Render kandungan (sub-tugasan)
+            // Dapatkan senarai nama AJK secara dinamik berdasarkan pasukan
+            const idPasukan = pemetaanItemKePasukan[id];
+            let senaraiNamaPIC = item.pic; // Default nama dari checklistData
+            
+            if (idPasukan && dataAJK[idPasukan]) {
+                // Ambil dan gabungkan semua nama AJK di dalam pasukan tersebut
+                const namaGabungan = dataAJK[idPasukan]
+                    .map(ajk => ajk.nama.trim())
+                    .filter(nama => nama !== "" && !nama.toLowerCase().includes("taip nama")) // Buang input kosong
+                    .join(' • ');
+                
+                if (namaGabungan) {
+                    senaraiNamaPIC = namaGabungan;
+                } else {
+                    senaraiNamaPIC = "Belum Ditetapkan";
+                }
+            }
+            
+            document.getElementById('detail-pic').innerText = senaraiNamaPIC;
+            
+            // --- 1. Bahagian Senarai Sub-Tugasan ---
             const detailContent = document.getElementById('detail-content');
             detailContent.innerHTML = `<p class="text-sm text-slate-600 mb-6 bg-slate-100 p-3 rounded border border-slate-200 leading-relaxed">${item.content}</p>`;
             detailContent.innerHTML += `<h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-list-ul mr-2 text-blue-500"></i>Senarai Tugasan Terperinci (${peratus}%)</h4>`;
             
-            // Bina senarai sub-tugasan
-            let subtaskListHTML = '<div class="space-y-2">';
+            let subtaskListHTML = '<div class="space-y-2 mb-6">';
             item.subtasks.forEach((task, index) => {
                 const subtaskId = `item_${item.id}_sub_${index}`;
                 const isDone = subtaskStatus[subtaskId] === true;
@@ -742,15 +773,90 @@
                 const lineThrough = isDone ? 'line-through text-slate-400' : 'text-slate-700';
                 
                 subtaskListHTML += `
-                    <label class="flex items-center p-3 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                    <label class="flex items-center p-3 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 cursor-pointer transition shadow-sm">
                         <input type="checkbox" onchange="toggleSubtask('${subtaskId}', ${item.id})" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 mr-3" ${checkedHTML}>
                         <span class="font-medium text-sm ${lineThrough}">${task}</span>
                     </label>
                 `;
             });
             subtaskListHTML += '</div>';
-            detailContent.innerHTML += subtaskListHTML;
 
+            // --- Tarik Data Tempatan (Local Storage) ---
+            let savedRemark = JSON.parse(localStorage.getItem('remarkHPU')) || {};
+            let currentRemark = savedRemark[id] || "";
+            
+            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
+            let currentFiles = savedFiles[id] || [];
+
+            let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
+            let currentLogs = savedLogs[id] || [];
+
+            // --- 2. Bahagian Catatan (Remarks) ---
+            let remarkHTML = `
+                <div class="mt-8 border-t border-slate-200 pt-6">
+                    <h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-edit mr-2 text-blue-500"></i>Catatan Tambahan (Remarks)</h4>
+                    <textarea id="remark-${id}" class="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white mb-2 shadow-inner" placeholder="Taip catatan, isu berbangkit atau pautan rujukan di sini...">${currentRemark}</textarea>
+                    <button onclick="simpanRemark(${id})" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-sm"><i class="fas fa-save mr-2"></i>Simpan Catatan</button>
+                </div>
+            `;
+
+            // --- 3. Bahagian Muat Naik Fail ---
+            let fileListHTML = currentFiles.map((f, i) => `
+                <div class="text-sm text-slate-600 flex justify-between items-center bg-white p-3 border border-slate-200 rounded-lg mb-2 shadow-sm">
+                    <span class="truncate font-medium"><i class="fas fa-file-pdf text-red-500 mr-3 text-lg"></i>${f}</span> 
+                    <button onclick="padamFail(${id}, ${i})" class="text-red-500 hover:text-red-700 bg-red-50 rounded px-3 py-1 transition"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            `).join('');
+
+            let fileUploadHTML = `
+                <div class="mt-8 border-t border-slate-200 pt-6">
+                    <h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-paperclip mr-2 text-blue-500"></i>Muat Naik Dokumen / Bukti</h4>
+                    <div class="flex flex-col md:flex-row items-center gap-3 mb-4">
+                        <input type="file" id="file-${id}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition cursor-pointer border border-slate-300 rounded-lg bg-white p-1">
+                        <button onclick="simpanFail(${id})" class="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap"><i class="fas fa-upload mr-2"></i>Simpan Fail</button>
+                    </div>
+                    <div id="file-list-${id}" class="max-h-40 overflow-y-auto pr-2">${fileListHTML || '<p class="text-xs text-slate-400 italic">Tiada dokumen dimuat naik.</p>'}</div>
+                </div>
+            `;
+
+            // --- 4. Bahagian Jadual Log Tindakan ---
+            let logRowsHTML = currentLogs.map((l, i) => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 text-xs text-slate-500 align-top">${l.date}</td>
+                    <td class="p-3 text-sm font-medium text-slate-700 align-top">${l.action}</td>
+                    <td class="p-3 text-xs font-bold text-slate-600 align-top">${l.pic}</td>
+                    <td class="p-3 text-center align-top"><button onclick="padamLog(${id}, ${i})" class="text-red-400 hover:text-red-600 transition"><i class="fas fa-times"></i></button></td>
+                </tr>
+            `).join('');
+
+            let tableHTML = `
+                <div class="mt-8 border-t border-slate-200 pt-6 mb-8">
+                    <h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-table mr-2 text-blue-500"></i>Jadual Log Tindakan</h4>
+                    <div class="flex flex-col md:flex-row gap-2 mb-4 bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-inner">
+                        <input type="text" id="log-action-${id}" placeholder="Kemas kini status / Minit mesyuarat..." class="w-full md:w-1/2 p-2.5 text-sm border border-slate-300 rounded outline-none focus:ring-1 focus:ring-blue-500">
+                        <input type="text" id="log-pic-${id}" placeholder="Nama Pelaksana..." class="w-full md:w-1/3 p-2.5 text-sm border border-slate-300 rounded outline-none focus:ring-1 focus:ring-blue-500">
+                        <button onclick="tambahLog(${id})" class="w-full md:w-1/6 bg-slate-800 hover:bg-slate-900 text-white rounded font-bold text-sm transition py-2.5 shadow"><i class="fas fa-plus mr-1"></i> Tambah</button>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-100 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3 text-xs font-bold text-slate-600 w-1/4">Tarikh & Masa</th>
+                                    <th class="p-3 text-xs font-bold text-slate-600 w-1/2">Tindakan / Perkara</th>
+                                    <th class="p-3 text-xs font-bold text-slate-600 w-1/5">PIC Pelaksana</th>
+                                    <th class="p-3 text-xs font-bold text-slate-600 text-center w-auto"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-table-${id}">${logRowsHTML || '<tr><td colspan="4" class="p-6 text-center text-sm text-slate-400 italic">Tiada log tindakan direkodkan lagi.</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // Memasukkan semua HTML ke dalam page
+            detailContent.innerHTML += subtaskListHTML + remarkHTML + fileUploadHTML + tableHTML;
+
+            // Status Badge
             const statusBadge = document.getElementById('detail-status');
             if(peratus === 100) {
                 statusBadge.className = "bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200";
@@ -765,6 +871,68 @@
 
             document.getElementById('checklist-main-view').classList.add('hidden');
             document.getElementById('checklist-detail-view').classList.remove('hidden');
+        }
+
+        // --- FUNGSI TAMBAHAN (CATATAN, FAIL & LOG TINDAKAN) ---
+        function simpanRemark(id) {
+            const textarea = document.getElementById('remark-' + id);
+            let savedRemark = JSON.parse(localStorage.getItem('remarkHPU')) || {};
+            savedRemark[id] = textarea.value;
+            localStorage.setItem('remarkHPU', JSON.stringify(savedRemark));
+            alert("Catatan berjaya disimpan!");
+        }
+
+        function simpanFail(id) {
+            const input = document.getElementById('file-' + id);
+            if(input.files.length === 0) {
+                alert("Sila pilih dokumen/fail terlebih dahulu.");
+                return;
+            }
+            const fileName = input.files[0].name; // Simulasi: Simpan nama fail
+            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
+            if(!savedFiles[id]) savedFiles[id] = [];
+            savedFiles[id].push(fileName);
+            localStorage.setItem('filesHPU', JSON.stringify(savedFiles));
+            openItemDetail(id); // Muat semula UI untuk tunjuk senarai fail
+        }
+
+        function padamFail(id, index) {
+            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
+            if(savedFiles[id]) {
+                savedFiles[id].splice(index, 1);
+                localStorage.setItem('filesHPU', JSON.stringify(savedFiles));
+                openItemDetail(id); // Muat semula UI
+            }
+        }
+
+        function tambahLog(id) {
+            const action = document.getElementById('log-action-' + id).value;
+            const pic = document.getElementById('log-pic-' + id).value;
+            if(!action) {
+                alert("Sila masukkan butiran tindakan / perkara.");
+                return;
+            }
+            
+            // Format Tarikh & Masa Cth: 02/04/2026 10:30 AM
+            const now = new Date();
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit' };
+            const dateStr = now.toLocaleDateString('ms-MY', options);
+
+            let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
+            if(!savedLogs[id]) savedLogs[id] = [];
+            
+            savedLogs[id].push({ date: dateStr, action: action, pic: pic || 'Admin' });
+            localStorage.setItem('logsHPU', JSON.stringify(savedLogs));
+            openItemDetail(id); // Muat semula UI
+        }
+
+        function padamLog(id, index) {
+            if(confirm("Adakah anda pasti mahu memadam rekod log tindakan ini?")) {
+                let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
+                savedLogs[id].splice(index, 1);
+                localStorage.setItem('logsHPU', JSON.stringify(savedLogs));
+                openItemDetail(id); // Muat semula UI
+            }
         }
 
         // FUNGSI BAHARU: Fungsi untuk toggle status sub-tugasan dan save dalam local storage
@@ -853,14 +1021,27 @@
 
             dataChecklistFasa[fasa].forEach(id => {
                 const item = checklistData.find(d => d.id === id);
-                const isChecked = item.checked ? 'checked' : '';
-                const lineThrough = item.checked ? 'line-through text-slate-400' : 'text-slate-700';
+                const peratus = countItemProgress(item);
+                
+                // Buang nombor di depan tajuk (Cth: "1. Invitation" menjadi "Invitation")
+                const tajukBersih = item.title.replace(/^\d+\.\s*/, '');
+                
+                // Warna cecair: Hijau jika 100% selesai, Biru jika sedang berjalan
+                const bgCecair = peratus === 100 ? 'bg-green-200' : 'bg-blue-200';
+                const textColor = peratus === 100 ? 'text-green-900' : 'text-slate-800';
+                const percentColor = peratus === 100 ? 'text-green-700' : 'text-blue-700';
 
                 senaraiContainer.innerHTML += `
-                    <label class="flex items-center p-3 border border-slate-200 bg-white rounded-lg shadow-sm hover:border-blue-400 cursor-pointer transition">
-                        <input type="checkbox" onchange="toggleCheck(${id})" class="w-5 h-5 rounded focus:ring-2 text-blue-600" ${isChecked}>
-                        <span class="ml-3 font-medium ${lineThrough}">${item.title}</span>
-                    </label>
+                    <div onclick="openItemDetail(${id})" class="relative overflow-hidden flex items-center p-3 border border-slate-200 bg-white rounded-lg shadow-sm hover:border-blue-400 cursor-pointer transition group">
+                        
+                        <div class="absolute left-0 top-0 bottom-0 ${bgCecair} opacity-60 transition-all duration-1000 ease-in-out" style="width: ${peratus}%;"></div>
+                        
+                        <div class="relative z-10 flex justify-between w-full items-center">
+                            <span class="font-bold text-sm ${textColor} group-hover:text-blue-700 transition truncate pr-2">${tajukBersih}</span>
+                            <span class="text-xs font-black ${percentColor} bg-white/80 px-2 py-1 rounded shadow-sm flex-shrink-0">${peratus}%</span>
+                        </div>
+                        
+                    </div>
                 `;
             });
 
