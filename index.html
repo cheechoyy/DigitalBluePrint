@@ -872,9 +872,9 @@
             const idPasukan = pemetaanItemKePasukan[id];
             let senaraiNamaPIC = item.pic; // Default nama dari checklistData
             
-            if (idPasukan && dataAJK[idPasukan]) {
+            if (idPasukan && window.dataAJK && window.dataAJK[idPasukan]) {
                 // Ambil dan gabungkan semua nama AJK di dalam pasukan tersebut
-                const namaGabungan = dataAJK[idPasukan]
+                const namaGabungan = window.dataAJK[idPasukan]
                     .map(ajk => ajk.nama.trim())
                     .filter(nama => nama !== "" && !nama.toLowerCase().includes("taip nama")) // Buang input kosong
                     .join(' • ');
@@ -1172,7 +1172,7 @@
         }
 
         // --- PENGURUSAN AJK DINAMIK (BOLEH EDIT, TAMBAH & PADAM) ---
-        const lalaiDataAJK = {
+        window.lalaiDataAJK = {
             pasukan1: [
                 { nama: "Dr. Halizah", tugas: "Ketua Penyelaras, Penyediaan TOR & Draf Surat" },
                 { nama: "Dr. Faizah", tugas: "Jemputan VIP, Selaraskan Ucapan VIP & Protokol" },
@@ -1208,7 +1208,7 @@
             'slate': { bg: 'bg-slate-50', text: 'text-slate-600', iconBg: 'bg-slate-200' }
         };
 
-        let dataAJK = JSON.parse(localStorage.getItem('dataAJKDinamikHPU')) || lalaiDataAJK;
+        window.dataAJK = window.dataAJK || window.lalaiDataAJK;
 
         function renderSemuaAJK() {
             renderKumpulanAJK('pasukan1', 'blue');
@@ -1221,12 +1221,12 @@
             const container = document.querySelector(`#${idPasukan} .space-y-2`);
             if(!container) return;
 
-            container.innerHTML = ''; // Clear susunan lama
+            container.innerHTML = ''; 
             const abjad = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            dataAJK[idPasukan].forEach((ajk, index) => {
+            window.dataAJK[idPasukan].forEach((ajk, index) => {
                 const huruf = abjad[index % 26];
-                const w = index === 0 ? temaWarna[warna] : temaWarna['slate']; // Ketua pasukan ikut warna tema
+                const w = index === 0 ? temaWarna[warna] : temaWarna['slate']; 
                 
                 const itemHTML = `
                     <div class="flex items-center p-2 ${w.bg} rounded hover:bg-slate-100 transition relative group border border-transparent hover:border-slate-300">
@@ -1250,22 +1250,21 @@
             `;
         }
 
+        // --- HANTAR PERUBAHAN AJK KE FIREBASE ---
         function updateAJK(idPasukan, index, field, value) {
-            dataAJK[idPasukan][index][field] = value;
-            localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
+            window.dataAJK[idPasukan][index][field] = value;
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function tambahAJK(idPasukan) {
-            dataAJK[idPasukan].push({ nama: "", tugas: "" });
-            localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
-            renderSemuaAJK(); // Refresh paparan
+            window.dataAJK[idPasukan].push({ nama: "", tugas: "" });
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function buangAJK(idPasukan, index) {
-            if(confirm("Adakah anda pasti mahu memadam AJK ini?")) {
-                dataAJK[idPasukan].splice(index, 1);
-                localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
-                renderSemuaAJK(); // Refresh paparan
+            if(confirm("Adakah anda pasti mahu memadam AJK ini dari pangkalan data?")) {
+                window.dataAJK[idPasukan].splice(index, 1);
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             }
         }
 
@@ -1556,14 +1555,15 @@
         }
     });
 
-    // 2. JAMBATAN DATA CHECKLIST & PROGRESS
+    // 2. JAMBATAN DATA CHECKLIST, PROGRESS & AJK KESELURUHAN
     window.simpanDataUtamaKeCloud = async function() {
         try {
             await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
                 subtaskStatus: window.subtaskStatus || {},
                 savedRemark: window.savedRemark || {},
                 savedFiles: window.savedFiles || {},
-                savedLogs: window.savedLogs || {}
+                savedLogs: window.savedLogs || {},
+                dataAJK: window.dataAJK || window.lalaiDataAJK // Simpan AJK ke cloud
             });
         } catch(e) {
             console.error("Firebase Gagal Menyimpan:", e);
@@ -1576,9 +1576,13 @@
             window.savedRemark = data.savedRemark || {};
             window.savedFiles = data.savedFiles || {};
             window.savedLogs = data.savedLogs || {};
+            window.dataAJK = data.dataAJK || window.lalaiDataAJK; // Baca AJK dari cloud
 
+            // Auto-refresh UI secara live
             if(typeof renderChecklistMain === "function") renderChecklistMain();
+            if(typeof renderSemuaAJK === "function") renderSemuaAJK(); 
 
+            // Kemas kini tetingkap perincian jika sedang dibuka
             const detailView = document.getElementById('checklist-detail-view');
             if (detailView && !detailView.classList.contains('hidden') && window.currentOpenItemId) {
                 openItemDetail(window.currentOpenItemId);
