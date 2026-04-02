@@ -806,15 +806,15 @@
             { id: 15, title: "15. Photograph / Video", pic: "En. Azim", content: `Jurugambar.`, subtasks: ["Lantik jurugambar", "Jadual fotografi", "Muat naik foto"] }
         ];
 
-        // Muat turun status SUB-TUGASAN dari local storage
-        let subtaskStatus = JSON.parse(localStorage.getItem('subtaskStatusHPU')) || {};
+        // --- BACA DATA STATUS TERUS DARI FIREBASE ---
+        window.subtaskStatus = window.subtaskStatus || {};
 
-        // Fungsi bantu untuk kira peratusan satu item checklist
+        // Fungsi bantu untuk kira peratusan satu item checklist (Live dari Cloud)
         function countItemProgress(item) {
             const totalSub = item.subtasks.length;
             const completedSub = item.subtasks.filter((task, index) => {
                 const subtaskId = `item_${item.id}_sub_${index}`;
-                return subtaskStatus[subtaskId] === true;
+                return window.subtaskStatus && window.subtaskStatus[subtaskId] === true;
             }).length;
             return totalSub > 0 ? Math.round((completedSub / totalSub) * 100) : 0;
         }
@@ -896,7 +896,8 @@
             let subtaskListHTML = '<div class="space-y-2 mb-6">';
             item.subtasks.forEach((task, index) => {
                 const subtaskId = `item_${item.id}_sub_${index}`;
-                const isDone = subtaskStatus[subtaskId] === true;
+                // Pastikan ia semak dari saluran window (Firebase)
+                const isDone = window.subtaskStatus && window.subtaskStatus[subtaskId] === true;
                 const checkedHTML = isDone ? 'checked' : '';
                 const lineThrough = isDone ? 'line-through text-slate-400' : 'text-slate-700';
                 
@@ -1559,12 +1560,14 @@
     window.simpanDataUtamaKeCloud = async function() {
         try {
             await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
-                subtaskStatus: window.subtaskStatus,
-                savedRemark: window.savedRemark,
-                savedFiles: window.savedFiles,
-                savedLogs: window.savedLogs
+                subtaskStatus: window.subtaskStatus || {},
+                savedRemark: window.savedRemark || {},
+                savedFiles: window.savedFiles || {},
+                savedLogs: window.savedLogs || {}
             });
-        } catch(e){}
+        } catch(e) {
+            console.error("Firebase Gagal Menyimpan:", e);
+        }
     };
     onSnapshot(doc(window.db, "SistemHPU", "DataUtama"), (docSnap) => {
         if (docSnap.exists()) {
