@@ -65,7 +65,7 @@
                     
                     <div class="bg-green-50 border border-green-200 p-6 rounded-xl text-center">
                         <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
-                        <h3 class="text-2xl font-bold text-green-900">35%</h3>
+                        <h3 id="progress-dashboard" class="text-2xl font-bold text-green-900">0%</h3>
                         <p class="text-sm text-green-700 font-medium">Progres Keseluruhan</p>
                     </div>
                     
@@ -110,7 +110,7 @@
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Draf jemputan, surat rasmi dan TOR telah siap. Menunggu kelulusan Pengarah sebelum edaran.</p>
                         </div>
                         
-                        <div id="pasukan1" class="hidden bg-white p-5 border-t border-slate-200">
+                        <div id="pasukan1" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-blue-500"></i>Senarai AJK (Jemputan & TOR)</h4>
@@ -166,7 +166,7 @@
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> 3 lokasi hotel/dewan telah disenarai pendek. Sebut harga katering sedang dinilai.</p>
                         </div>
                         
-                        <div id="pasukan2" class="hidden bg-white p-5 border-t border-slate-200">
+                        <div id="pasukan2" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-green-500"></i>Senarai AJK (5 Orang)</h4>
@@ -221,7 +221,7 @@
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Pembinaan struktur pangkalan data (QR code check-in) dan sistem pengumpulan input kumpulan (State Engagement Portal) telah dimulakan.</p>
                         </div>
                         
-                        <div id="pasukan3" class="hidden bg-white p-5 border-t border-slate-200">
+                        <div id="pasukan3" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-purple-500"></i>Senarai AJK (4 Orang)</h4>
@@ -263,7 +263,7 @@
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Perbincangan awal bersama pihak UKK. Lakaran awal 'backdrop' dan konsep montaj sedang dirangka oleh pereka grafik.</p>
                         </div>
                         
-                        <div id="pasukan4" class="hidden bg-white p-5 border-t border-slate-200">
+                        <div id="pasukan4" class="hidden bg-white p-5 border-t border-slate-200" onclick="event.stopPropagation()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <h4 class="font-bold text-slate-700 mb-3 text-sm uppercase tracking-wide border-b pb-2"><i class="fas fa-users mr-2 text-orange-500"></i>Senarai AJK (3 Orang)</h4>
@@ -420,7 +420,7 @@
                         <p class="text-slate-500 mt-2">Tarikh Semasa: <span class="font-bold text-blue-600">1 April 2026</span> | Tarikh Bengkel: <span class="font-bold text-red-500">19 - 21 Mei 2026</span></p>
                     </div>
                     <div class="hidden md:block">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Status: Berjalan Lancar</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Status Kemajuan: <span id="progress-timeline" class="text-blue-900 font-black">0%</span></span>
                     </div>
                 </div>
                 
@@ -652,144 +652,214 @@
         }
 
         // --- FUNGSI CHECKLIST UTAMA ---
+        // Data baharu dengan struktur purata: Setiap item ada senarai sub-tugasan.
+        // Progres item = (bil sub-tugasan ditik / jumlah sub-tugasan) * 100.
         const checklistData = [
-            {
-                id: 1, title: "1. Invitation (Attendance / Usherer)", pic: "En. Abu Bakar (Mock 1)", checked: true,
-                content: `
-                    <h4 class="font-bold mb-3 text-blue-800"><i class="fas fa-clipboard-list mr-2"></i>Status Pendaftaran Usherer & Kehadiran</h4>
-                    <table class="w-full border-collapse bg-white rounded shadow-sm text-sm border">
-                        <tr class="bg-blue-50 border-b"><th class="p-2 border-r">Nama Usherer</th><th class="p-2 border-r">Kawasan Bertugas</th><th class="p-2 text-center">Status Latihan</th></tr>
-                        <tr class="border-b"><td class="p-2 border-r">Cik Aminah</td><td class="p-2 border-r">Pintu Utama & VIP</td><td class="p-2 text-center text-green-600"><i class="fas fa-check"></i> Selesai</td></tr>
-                        <tr class="border-b"><td class="p-2 border-r">En. Ramesh</td><td class="p-2 border-r">Meja Pendaftaran</td><td class="p-2 text-center text-green-600"><i class="fas fa-check"></i> Selesai</td></tr>
-                    </table>`
-            },
-            { id: 2, title: "2. VIPs (Program / Speech)", pic: "Pn. Siti Fatimah (Mock 2)", checked: false, content: `Sahkan kehadiran Menteri / Ketua Pengarah.` },
-            { id: 3, title: "3. Agenda", pic: "Dr. Kamal (Mock 3)", checked: true, content: `Agenda 3 hari penuh telah dipersetujui.` },
-            { id: 4, title: "4. Venue / Avenue", pic: "En. Rizal (Mock 4)", checked: false, content: `Lokasi Dipilih: Dewan Utama, PICC (TBC).` },
-            { id: 5, title: "5. Food & Beverage", pic: "Cik Norlia (Mock 5)", checked: false, content: `Menunggu Sebutharga Katering.` },
-            { id: 6, title: "6. IT System (State Engagement Portal)", pic: "Ts. Hafiz (Mock 6)", checked: false, content: `Portal sedang dibangunkan.` },
-            { id: 7, title: "7. Audio / Visual (Negaraku / Doa)", pic: "En. Daniel (Mock 7)", checked: false, content: `Semak fail audio & lantik pembaca doa.` },
-            { id: 8, title: "8. Printing", pic: "Pn. Aishah (Mock 8)", checked: false, content: `Cetak buku program & tanda nama (250 pax).` },
-            { id: 9, title: "9. Car Park (Direction / Floor)", pic: "En. Zulkifli (Mock 9)", checked: false, content: `Permohonan flat rate letak kereta.` },
-            { id: 10, title: "10. House-Keeping (Safety)", pic: "Cik Salwa (Mock 10)", checked: false, content: `Sediakan taklimat keselamatan.` },
-            { id: 11, title: "11. Reminder / Notification", pic: "Pn. Melissa (Mock 11)", checked: false, content: `Sistem SMS/E-mel blast automatik.` },
-            { id: 12, title: "12. Press Conference (UKK)", pic: "En. Khairul (Mock 12)", checked: false, content: `Senaraikan wartawan & media jemputan.` },
-            { id: 13, title: "13. Backdrop", pic: "Cik Diana (Mock 13)", checked: false, content: `Reka bentuk backdrop sedang dirangka.` },
-            { id: 14, title: "14. Gimik Launching / Montage", pic: "En. Firdaus (Mock 14)", checked: false, content: `Montaj video dalam pembikinan.` },
-            { id: 15, title: "15. Photograph / Video", pic: "En. Azim (Mock 15)", checked: false, content: `Lantik Jurugambar Rasmi (RO).` }
+            { id: 1, title: "1. Invitation (Attendance / Usherer)", pic: "En. Abu Bakar", content: "Status Pendaftaran Usherer", subtasks: ["Sediakan senarai jemputan", "Draf surat jemputan", "Luluskan surat Pengarah", "Hantar emel jemputan", "Sahkan kehadiran"] },
+            { id: 2, title: "2. VIPs (Program / Speech)", pic: "Pn. Siti Fatimah", content: `Sahkan kehadiran Menteri.`, subtasks: ["Senarai pendek VIP", "Hantar surat peribadi", "Sahkan kehadiran utama", "Lantik pembaca doa", "Draf teks ucapan CDO"] },
+            { id: 3, title: "3. Agenda", pic: "Dr. Kamal", content: `Agenda 3 hari.`, subtasks: ["Agenda kasar", "Luluskan draf", "Muat naik portal", "Edar agenda akhir"] },
+            { id: 4, title: "4. Venue / Avenue", pic: "En. Rizal", content: `Lokasi Dipilih.`, subtasks: ["Tinjauan lokasi", "Tempah tarikh", "Sebut harga tempat", "Luluskan bajet"] },
+            { id: 5, title: "5. Food & Beverage", pic: "Cik Norlia", content: `Sebut Harga.`, subtasks: ["Sebut harga katering", "Tempah katering", "Sahkan menu VIP", "Jumlah pax akhir"] },
+            { id: 6, title: "6. IT System (State Engagement Portal)", pic: "Ts. Hafiz", content: `Portal.`, subtasks: ["Pembangunan portal", "Uji portal", "Buka pendaftaran", "Urus data"] },
+            { id: 7, title: "7. Audio / Visual (Negaraku / Doa)", pic: "En. Daniel", content: `Audio.`, subtasks: ["PA System dewan", "Sediakan lagu Negaraku", "Sediakan skrip doa", "Sediakan skrin besar"] },
+            { id: 8, title: "8. Printing", pic: "Pn. Aishah", content: `Cetak buku.`, subtasks: ["Draf tanda nama", "Draf buku program", "Luluskan design", "Cetak semua"] },
+            { id: 9, title: "9. Car Park (Direction / Floor)", pic: "En. Zulkifli", content: `Parking.`, subtasks: ["Papan tanda parking", "Lantik AJK parkir", "Peta parking"] },
+            { id: 10, title: "10. House-Keeping (Safety)", pic: "Cik Salwa", content: `Keselamatan.`, subtasks: ["Tinjau kebersihan", "Evacuation plan", "SOP Keselamatan"] },
+            { id: 11, title: "11. Reminder / Notification", pic: "Pn. Melissa", content: `SMS/E-mel blast.`, subtasks: ["Hantar SMS peringatan", "Hantar emel peringatan"] },
+            { id: 12, title: "12. Press Conference (UKK)", pic: "En. Khairul", content: `Media.`, subtasks: ["Lantik AJK media", "Media invite", "Press release"] },
+            { id: 13, title: "13. Backdrop", pic: "Cik Diana", content: `Reka bentuk backdrop.`, subtasks: ["Design backdrop", "Luluskan design", "Cetak backdrop"] },
+            { id: 14, title: "14. Gimik Launching / Montage", pic: "En. Firdaus", content: `Montaj video.`, subtasks: ["Design gimik", "Uji gimik", "Montaj video", "Uji montage"] },
+            { id: 15, title: "15. Photograph / Video", pic: "En. Azim", content: `Jurugambar.`, subtasks: ["Lantik jurugambar", "Jadual fotografi", "Muat naik foto"] }
         ];
+
+        // Muat turun status SUB-TUGASAN dari local storage
+        let subtaskStatus = JSON.parse(localStorage.getItem('subtaskStatusHPU')) || {};
+
+        // Fungsi bantu untuk kira peratusan satu item checklist
+        function countItemProgress(item) {
+            const totalSub = item.subtasks.length;
+            const completedSub = item.subtasks.filter((task, index) => {
+                const subtaskId = `item_${item.id}_sub_${index}`;
+                return subtaskStatus[subtaskId] === true;
+            }).length;
+            return totalSub > 0 ? Math.round((completedSub / totalSub) * 100) : 0;
+        }
 
         function renderChecklistMain() {
             const grid = document.getElementById('checklist-grid');
             grid.innerHTML = ''; 
             
             checklistData.forEach(item => {
+                const peratus = countItemProgress(item);
+                // Pilih warna progres (Selesai = hijau, Proses = biru)
+                const progressColor = peratus === 100 ? "text-green-600 bg-green-50 border-green-200" : "text-blue-600 bg-blue-50 border-blue-200";
+                
                 const itemHTML = `
-                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-blue-50 transition bg-white shadow-sm cursor-pointer" onclick="openItemDetail(${item.id})">
-                        <div class="flex items-center w-2/3">
-                            <i class="fas fa-edit text-blue-400 mr-3"></i>
-                            <span class="font-medium text-slate-700 truncate">${item.title}</span>
+                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-blue-300 transition bg-white shadow-sm cursor-pointer group" onclick="openItemDetail(${item.id})">
+                        <div class="flex items-center w-3/4">
+                            <div class="p-2 ${progressColor} border rounded mr-3 text-center w-16 h-12 flex justify-center items-center font-black">
+                                <span class="text-xl">${peratus}%</span>
+                            </div>
+                            <div class="flex items-center group-hover:text-blue-600 transition truncate">
+                                <i class="fas fa-edit text-slate-300 group-hover:text-blue-400 mr-2 transition-colors"></i>
+                                <span class="font-medium text-slate-700 truncate">${item.title}</span>
+                            </div>
                         </div>
-                        <button class="text-blue-600 hover:bg-blue-200 hover:text-blue-800 px-3 py-1 rounded text-sm font-semibold transition border border-transparent hover:border-blue-300">
-                            <i class="fas fa-eye mr-1"></i> Perincian
+                        <button class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 px-3 py-1 rounded text-sm font-semibold transition border border-transparent hover:border-blue-200">
+                            Edit <i class="fas fa-chevron-right ml-1"></i>
                         </button>
                     </div>
                 `;
                 grid.innerHTML += itemHTML;
             });
+            kiraPeratusan(); // Kemas kini progress keseluruhan (dashboard)
+        }
+
+        // FUNGSI BUTANG KEMBALI
+        function closeItemDetail() {
+            document.getElementById('checklist-detail-view').classList.add('hidden');
+            document.getElementById('checklist-main-view').classList.remove('hidden');
         }
 
         function openItemDetail(id) {
             const item = checklistData.find(d => d.id === id);
+            const peratus = countItemProgress(item);
+            
             document.getElementById('detail-title').innerText = item.title;
             document.getElementById('detail-pic').innerText = item.pic;
             
-            // Muat turun nota yang pernah di-save (jika ada)
-            let savedData = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
+            // Render kandungan (sub-tugasan)
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = `<p class="text-sm text-slate-600 mb-6 bg-slate-100 p-3 rounded border border-slate-200 leading-relaxed">${item.content}</p>`;
+            detailContent.innerHTML += `<h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-list-ul mr-2 text-blue-500"></i>Senarai Tugasan Terperinci (${peratus}%)</h4>`;
             
-            // Buang tag HTML asal supaya kotak edit nampak bersih (Plain Text)
-            let defaultText = item.content.replace(/<[^>]*>?/gm, ''); 
-            let currentContent = savedData[id] !== undefined ? savedData[id] : defaultText;
+            // Bina senarai sub-tugasan
+            let subtaskListHTML = '<div class="space-y-2">';
+            item.subtasks.forEach((task, index) => {
+                const subtaskId = `item_${item.id}_sub_${index}`;
+                const isDone = subtaskStatus[subtaskId] === true;
+                const checkedHTML = isDone ? 'checked' : '';
+                const lineThrough = isDone ? 'line-through text-slate-400' : 'text-slate-700';
+                
+                subtaskListHTML += `
+                    <label class="flex items-center p-3 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="toggleSubtask('${subtaskId}', ${item.id})" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 mr-3" ${checkedHTML}>
+                        <span class="font-medium text-sm ${lineThrough}">${task}</span>
+                    </label>
+                `;
+            });
+            subtaskListHTML += '</div>';
+            detailContent.innerHTML += subtaskListHTML;
 
-            // Tukar bahagian content kepada kotak Textarea
-            document.getElementById('detail-content').innerHTML = `
-                <label class="block text-sm font-bold text-slate-700 mb-2 mt-4"><i class="fas fa-edit text-blue-500 mr-1"></i> Edit To-Do List / Nota:</label>
-                <textarea id="textarea-nota-${id}" placeholder="Taip senarai tugas di sini..." class="w-full h-40 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-700 bg-white shadow-inner mb-3 leading-relaxed">${currentContent}</textarea>
-                <div class="flex justify-end">
-                    <button onclick="simpanNota(${id})" class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition font-bold text-sm">
-                        <i class="fas fa-save mr-2"></i> Simpan
-                    </button>
-                </div>
-            `;
-            
             const statusBadge = document.getElementById('detail-status');
-            statusBadge.className = "bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-200";
-            statusBadge.innerHTML = '<i class="fas fa-tasks mr-1"></i> To-Do List';
+            if(peratus === 100) {
+                statusBadge.className = "bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200";
+                statusBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Selesai';
+            } else if(peratus > 0) {
+                statusBadge.className = "bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-200";
+                statusBadge.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Sedang Berjalan';
+            } else {
+                statusBadge.className = "bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold border border-orange-200";
+                statusBadge.innerHTML = '<i class="fas fa-pause-circle mr-1"></i> Menunggu Tindakan';
+            }
 
             document.getElementById('checklist-main-view').classList.add('hidden');
             document.getElementById('checklist-detail-view').classList.remove('hidden');
         }
 
-        // FUNGSI BAHARU: Untuk simpan data ke browser
+        // FUNGSI BAHARU: Fungsi untuk toggle status sub-tugasan dan save dalam local storage
+        function toggleSubtask(subtaskId, itemId) {
+            const isDone = document.querySelector(`input[onchange="toggleSubtask('${subtaskId}', ${itemId})"]`).checked;
+            
+            // Update status local storage
+            subtaskStatus[subtaskId] = isDone;
+            localStorage.setItem('subtaskStatusHPU', JSON.stringify(subtaskStatus));
+            
+            // Kemas kini paparan perincian (untuk update status badge dan strikethrough)
+            openItemDetail(itemId); 
+        }
+
         function simpanNota(id) {
             const textarea = document.getElementById('textarea-nota-' + id);
-            const notaBaru = textarea.value;
+            let savedNota = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
+            savedNota[id] = textarea.value;
+            localStorage.setItem('notaChecklistHPU', JSON.stringify(savedNota));
+            alert("Nota berjaya disimpan!");
+        }
+
+        // FUNGSI TICK CHECKLIST & KIRA PERATUSAN
+        function toggleCheck(id) {
+            const item = checklistData.find(d => d.id === id);
+            item.checked = !item.checked;
             
-            // Simpan ke localStorage
-            let savedData = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
-            savedData[id] = notaBaru;
-            localStorage.setItem('notaChecklistHPU', JSON.stringify(savedData));
+            savedStatus[id] = item.checked;
+            localStorage.setItem('statusChecklistHPU', JSON.stringify(savedStatus));
             
-            alert("Nota To-Do List telah berjaya disimpan!");
+            renderChecklistMain(); // Refresh checklist utama
+            
+            // Refresh checklist di Timeline jika ia sedang dibuka
+            const fasaSemasa = document.getElementById('paparan-checklist-fasa').getAttribute('data-fasa');
+            if(!document.getElementById('paparan-checklist-fasa').classList.contains('hidden') && fasaSemasa) {
+                paparChecklistFasa(fasaSemasa);
+            }
+        }
+
+        function kiraPeratusan() {
+            const totalItems = checklistData.length;
+            let sumPeratus = 0;
+            
+            checklistData.forEach(item => {
+                // Ambil progres percentage individu
+                sumPeratus += countItemProgress(item);
+            });
+            
+            // Kira purata dari 15 item tersebut
+            const overallPeratus = Math.round(sumPeratus / totalItems);
+            
+            const dashProg = document.getElementById('progress-dashboard');
+            if(dashProg) dashProg.innerText = overallPeratus + '%';
+
+            const timeProg = document.getElementById('progress-timeline');
+            if(timeProg) timeProg.innerText = overallPeratus + '%';
         }
 
         // --- FUNGSI TIMELINE FASA CHECKLIST ---
         const dataChecklistFasa = {
-            pra: [
-                "1. Invitation (Attendance / Usherer)", "2. VIPs (Program / Speech)", "3. Agenda", 
-                "4. Venue / Avenue", "5. Food & Beverage", "6. IT System (State Engagement Portal)", 
-                "8. Printing (Buku/Tag)", "11. Reminder / Notification / Welcoming", "13. Backdrop Design"
-            ],
-            semasa: [
-                "7. Audio / Visual (Negaraku / Doa)", "9. Car Park (Direction / Floor)", 
-                "10. House-Keeping (Safety / Evacuation)", "12. Press Conference (UKK)", "15. Photograph / Video"
-            ],
-            pasca: [
-                "14. Gimik Launching / Montage (Persediaan Pelancaran Rasmi Blueprint)"
-            ]
+            pra: [1, 2, 3, 4, 5, 6, 8, 11, 13],
+            semasa: [7, 9, 10, 12, 15],
+            pasca: [14]
         };
 
         function paparChecklistFasa(fasa) {
             document.getElementById('paparan-checklist-fasa').classList.remove('hidden');
+            document.getElementById('paparan-checklist-fasa').setAttribute('data-fasa', fasa);
+            
             const senaraiContainer = document.getElementById('senarai-checklist-dinamik');
             const tajuk = document.getElementById('tajuk-checklist-fasa');
             
             senaraiContainer.innerHTML = ''; 
-            let warnaTema = "";
-
-            ['pra', 'semasa', 'pasca'].forEach(f => {
-                document.getElementById('card-' + f).classList.remove('ring-4', 'ring-opacity-50');
-            });
+            ['pra', 'semasa', 'pasca'].forEach(f => document.getElementById('card-' + f).classList.remove('ring-4', 'ring-opacity-50'));
 
             if(fasa === 'pra') {
                 tajuk.innerHTML = '<i class="fas fa-clipboard-check text-blue-600 mr-2"></i>Tugasan Fasa 1: Pra-Bengkel';
-                warnaTema = "text-blue-600";
                 document.getElementById('card-pra').classList.add('ring-4', 'ring-blue-300', 'ring-opacity-50');
             } else if(fasa === 'semasa') {
                 tajuk.innerHTML = '<i class="fas fa-users-cog text-orange-500 mr-2"></i>Tugasan Fasa 2: Semasa Bengkel';
-                warnaTema = "text-orange-500";
                 document.getElementById('card-semasa').classList.add('ring-4', 'ring-orange-300', 'ring-opacity-50');
-            } else if(fasa === 'pasca') {
+            } else {
                 tajuk.innerHTML = '<i class="fas fa-rocket text-slate-500 mr-2"></i>Tugasan Fasa 3: Pasca-Bengkel';
-                warnaTema = "text-slate-600";
                 document.getElementById('card-pasca').classList.add('ring-4', 'ring-slate-300', 'ring-opacity-50');
             }
 
-            dataChecklistFasa[fasa].forEach(item => {
+            dataChecklistFasa[fasa].forEach(id => {
+                const item = checklistData.find(d => d.id === id);
+                const isChecked = item.checked ? 'checked' : '';
+                const lineThrough = item.checked ? 'line-through text-slate-400' : 'text-slate-700';
+
                 senaraiContainer.innerHTML += `
-                    <label class="flex items-center p-3 border border-white bg-white rounded-lg shadow-sm hover:border-${warnaTema.split('-')[1]}-300 cursor-pointer transition">
-                        <input type="checkbox" class="w-5 h-5 ${warnaTema} rounded focus:ring-2">
-                        <span class="ml-3 font-medium text-slate-700">${item}</span>
+                    <label class="flex items-center p-3 border border-slate-200 bg-white rounded-lg shadow-sm hover:border-blue-400 cursor-pointer transition">
+                        <input type="checkbox" onchange="toggleCheck(${id})" class="w-5 h-5 rounded focus:ring-2 text-blue-600" ${isChecked}>
+                        <span class="ml-3 font-medium ${lineThrough}">${item.title}</span>
                     </label>
                 `;
             });
@@ -799,14 +869,136 @@
 
         function tutupChecklistFasa() {
             document.getElementById('paparan-checklist-fasa').classList.add('hidden');
-            ['pra', 'semasa', 'pasca'].forEach(f => {
-                document.getElementById('card-' + f).classList.remove('ring-4', 'ring-opacity-50');
+            ['pra', 'semasa', 'pasca'].forEach(f => document.getElementById('card-' + f).classList.remove('ring-4', 'ring-opacity-50'));
+        }
+
+        // --- PENGURUSAN AJK DINAMIK (BOLEH EDIT, TAMBAH & PADAM) ---
+        const lalaiDataAJK = {
+            pasukan1: [
+                { nama: "Dr. Halizah", tugas: "Ketua Penyelaras, Penyediaan TOR & Draf Surat" },
+                { nama: "Dr. Faizah", tugas: "Jemputan VIP, Selaraskan Ucapan VIP & Protokol" },
+                { nama: "Dr. Abry", tugas: "Jemputan VIP, Selaraskan Ucapan VIP & Protokol" },
+                { nama: "Cik Ruran", tugas: "Penghantaran Emel Jemputan" },
+                { nama: "Puan Lida", tugas: "Penghantaran Emel Jemputan" }
+            ],
+            pasukan2: [
+                { nama: "Cik Ruran", tugas: "Venue & Penyediaan Kertas Kerja" },
+                { nama: "Cik Amirah", tugas: "Pengurusan Tempat (Venue)" },
+                { nama: "Encik Syahmir", tugas: "Video Housekeeping, Parking & Arah ke Ballroom" },
+                { nama: "Puan Lida", tugas: "Pengurusan Makanan (F&B)" }
+            ],
+            pasukan3: [
+                { nama: "Encik Rahman", tugas: "Ketua Sistem IT" },
+                { nama: "Encik Aliff", tugas: "Back End System" },
+                { nama: "Cik Izzah", tugas: "Back End System" }
+            ],
+            pasukan4: [
+                { nama: "Encik Syahmir", tugas: "Photographer & Video Rasmi" },
+                { nama: "Encik Alif", tugas: "Photographer & Video Rasmi" },
+                { nama: "Cik Izzah", tugas: "Sijil, Montaj, Backdrop & Lanyard" },
+                { nama: "Puan Fahada", tugas: "Montaj & Backdrop" },
+                { nama: "Cik Syu", tugas: "Lanyard & Buku Program" }
+            ]
+        };
+
+        const temaWarna = {
+            'blue': { bg: 'bg-blue-50', text: 'text-blue-700', iconBg: 'bg-blue-200' },
+            'green': { bg: 'bg-green-50', text: 'text-green-700', iconBg: 'bg-green-200' },
+            'purple': { bg: 'bg-purple-50', text: 'text-purple-700', iconBg: 'bg-purple-200' },
+            'orange': { bg: 'bg-orange-50', text: 'text-orange-700', iconBg: 'bg-orange-200' },
+            'slate': { bg: 'bg-slate-50', text: 'text-slate-600', iconBg: 'bg-slate-200' }
+        };
+
+        let dataAJK = JSON.parse(localStorage.getItem('dataAJKDinamikHPU')) || lalaiDataAJK;
+
+        function renderSemuaAJK() {
+            renderKumpulanAJK('pasukan1', 'blue');
+            renderKumpulanAJK('pasukan2', 'green');
+            renderKumpulanAJK('pasukan3', 'purple');
+            renderKumpulanAJK('pasukan4', 'orange');
+        }
+
+        function renderKumpulanAJK(idPasukan, warna) {
+            const container = document.querySelector(`#${idPasukan} .space-y-2`);
+            if(!container) return;
+
+            container.innerHTML = ''; // Clear susunan lama
+            const abjad = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            dataAJK[idPasukan].forEach((ajk, index) => {
+                const huruf = abjad[index % 26];
+                const w = index === 0 ? temaWarna[warna] : temaWarna['slate']; // Ketua pasukan ikut warna tema
+                
+                const itemHTML = `
+                    <div class="flex items-center p-2 ${w.bg} rounded hover:bg-slate-100 transition relative group border border-transparent hover:border-slate-300">
+                        <div class="w-8 h-8 rounded-full ${w.iconBg} ${w.text} flex justify-center items-center font-bold mr-3 text-sm flex-shrink-0">${huruf}</div>
+                        <div class="w-full pr-8">
+                            <input type="text" value="${ajk.nama}" onchange="updateAJK('${idPasukan}', ${index}, 'nama', this.value)" class="w-full bg-transparent text-sm font-bold text-slate-800 outline-none hover:bg-white focus:bg-white focus:ring-1 focus:ring-blue-300 rounded px-1 py-0.5 transition" placeholder="Taip nama AJK...">
+                            <input type="text" value="${ajk.tugas}" onchange="updateAJK('${idPasukan}', ${index}, 'tugas', this.value)" class="w-full bg-transparent text-xs text-slate-500 outline-none hover:bg-white focus:bg-white focus:ring-1 focus:ring-blue-300 rounded px-1 py-0.5 mt-0.5 transition" placeholder="Taip spesifikasi tugasan...">
+                        </div>
+                        <button onclick="buangAJK('${idPasukan}', ${index})" class="absolute right-2 text-red-400 hover:text-red-600 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition transform scale-90 hover:scale-100" title="Padam AJK ini">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.innerHTML += itemHTML;
+            });
+
+            container.innerHTML += `
+                <button onclick="tambahAJK('${idPasukan}')" class="w-full mt-2 p-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-500 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition text-sm font-bold flex items-center justify-center">
+                    <i class="fas fa-plus mr-2"></i> Tambah AJK Baharu
+                </button>
+            `;
+        }
+
+        function updateAJK(idPasukan, index, field, value) {
+            dataAJK[idPasukan][index][field] = value;
+            localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
+        }
+
+        function tambahAJK(idPasukan) {
+            dataAJK[idPasukan].push({ nama: "", tugas: "" });
+            localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
+            renderSemuaAJK(); // Refresh paparan
+        }
+
+        function buangAJK(idPasukan, index) {
+            if(confirm("Adakah anda pasti mahu memadam AJK ini?")) {
+                dataAJK[idPasukan].splice(index, 1);
+                localStorage.setItem('dataAJKDinamikHPU', JSON.stringify(dataAJK));
+                renderSemuaAJK(); // Refresh paparan
+            }
+        }
+
+        // --- FUNGSI BUANG CHECKBOX TUGASAN SPESIFIK ---
+        function formatTugasanSpesifik() {
+            ['pasukan1', 'pasukan2', 'pasukan3', 'pasukan4'].forEach(p => {
+                const containers = document.querySelectorAll(`#${p} .space-y-2`);
+                if(containers.length > 1) {
+                    const tugasanContainer = containers[1]; // Ruangan checklist di sebelah kanan
+                    const inputs = tugasanContainer.querySelectorAll('input[type="checkbox"]');
+                    
+                    inputs.forEach(input => {
+                        const label = input.parentElement;
+                        label.className = "flex items-start p-3 border border-slate-200 rounded-lg bg-slate-50 mb-2 shadow-sm"; // Buang pointer hover
+                        
+                        const span = label.querySelector('span');
+                        if(span) {
+                            span.className = "ml-3 text-sm font-medium text-slate-700";
+                            span.insertAdjacentHTML('beforebegin', '<i class="fas fa-check-circle text-blue-500 mt-0.5 text-lg"></i>'); // Tukar kepada ikon bullet
+                        }
+                        input.remove(); // Padam kotak tick
+                    });
+                    tugasanContainer.removeAttribute('onclick'); // Padam fungsi event click
+                }
             });
         }
 
         window.onload = function() {
             paparJadualBerkumpulan();
             renderChecklistMain();
+            renderSemuaAJK();        // Render AJK Dinamik (Boleh tambah/padam)
+            formatTugasanSpesifik(); // Format senarai tepi (Buang checkbox)
         };
 
         const senaraiAJK = {
