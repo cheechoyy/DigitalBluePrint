@@ -743,18 +743,12 @@
             container.innerHTML = htmlJadual;
         }
 
-        // FUNGSI BAHARU: Kemas kini data terus ke sistem (Inline Edit Database)
+        // FUNGSI BAHARU: Kemas kini data terus ke FIREBASE
         function kemasKiniPeserta(index, field, value) {
-            // Ubah nilai objek pada index yang tepat
             senaraiPeserta[index][field] = value;
             
-            // Simpan ke database (Local Storage)
-            localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
-            
-            // Refresh jadual untuk mengemaskini warna status badge (jika status yang diubah)
-            if(field === 'status') {
-                paparJadualBerkumpulan();
-            }
+            // Hantar ke Firebase
+            if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
         }
 
         function tambahPeserta(event) {
@@ -765,7 +759,6 @@
             const jawatan = document.getElementById('inputJawatanDinamik').value;
             const status = document.getElementById('inputStatusDinamik').value;
 
-            // Struktur JSON sedia untuk Database / API POST
             const dataPesertaBaharu = { 
                 kategoriUtama: kategoriUtama, 
                 subKategori: subKategori, 
@@ -775,18 +768,20 @@
             };
 
             senaraiPeserta.push(dataPesertaBaharu);
-            localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
+            
+            // Hantar ke Firebase
+            if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
             
             document.getElementById('formPesertaDinamik').reset();
-            kemasKiniSubKategori(); // reset dropdown
-            paparJadualBerkumpulan();
+            kemasKiniSubKategori(); 
         }
 
         function padamPeserta(index) {
             if(confirm("Padam data peserta ini dari pangkalan data?")) {
                 senaraiPeserta.splice(index, 1);
-                localStorage.setItem('dataPesertaDinamikHPU', JSON.stringify(senaraiPeserta));
-                paparJadualBerkumpulan();
+                
+                // Hantar ke Firebase
+                if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
             }
         }
 
@@ -1562,6 +1557,47 @@
   }
 };
 
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAuYCFE-Alg4ukGETe4VVRm-4VxetfZkTQ",
+        authDomain: "dh-blueprint-monitor-progress.firebaseapp.com",
+        projectId: "dh-blueprint-monitor-progress",
+        storageBucket: "dh-blueprint-monitor-progress.firebasestorage.app",
+        messagingSenderId: "148434141568",
+        appId: "1:148434141568:web:ccb93ab832ff19f133c165",
+        measurementId: "G-ZYPNGNJT77"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.db = getFirestore(app); 
+
+    // --- JAMBATAN PANGKALAN DATA (SYNC KE FIREBASE) ---
+    // Fungsi untuk hantar data ke awan
+    window.simpanKeCloud = async function(dataPeserta) {
+        try {
+            await setDoc(doc(window.db, "SistemHPU", "SenaraiPeserta"), {
+                senarai: dataPeserta
+            });
+        } catch (e) {
+            console.error("Ralat menyimpan dokumen: ", e);
+        }
+    };
+
+    // Fungsi 'Telinga' - Dengar jika ada AJK lain ubah data secara Live!
+    onSnapshot(doc(window.db, "SistemHPU", "SenaraiPeserta"), (docSnap) => {
+        if (docSnap.exists()) {
+            senaraiPeserta = docSnap.data().senarai || []; // Kemas kini array tempatan
+            if(typeof paparJadualBerkumpulan === "function") {
+                paparJadualBerkumpulan(); // Refresh jadual secara automatik
+            }
+        }
+    });
+
+    console.log("Firebase & Real-time Sync Berjaya Diaktifkan!");
 </script>
 </body>
 </html>
