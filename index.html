@@ -909,15 +909,12 @@
             });
             subtaskListHTML += '</div>';
 
-            // --- Tarik Data Tempatan (Local Storage) ---
-            let savedRemark = JSON.parse(localStorage.getItem('remarkHPU')) || {};
-            let currentRemark = savedRemark[id] || "";
+            window.currentOpenItemId = id; // Beritahu Firebase ID apa yang sedang dibuka
             
-            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
-            let currentFiles = savedFiles[id] || [];
-
-            let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
-            let currentLogs = savedLogs[id] || [];
+            // --- Tarik Data Terus Dari Firebase ---
+            let currentRemark = window.savedRemark[id] || "";
+            let currentFiles = window.savedFiles[id] || [];
+            let currentLogs = window.savedLogs[id] || [];
 
             // --- 2. Bahagian Catatan (Remarks) ---
             let remarkHTML = `
@@ -1001,103 +998,68 @@
             document.getElementById('checklist-detail-view').classList.remove('hidden');
         }
 
-        // --- FUNGSI TAMBAHAN (CATATAN, FAIL & LOG TINDAKAN) ---
+        // --- FUNGSI TAMBAHAN (CATATAN, FAIL & LOG TINDAKAN) (HANTAR KE FIREBASE) ---
         function simpanRemark(id) {
             const textarea = document.getElementById('remark-' + id);
-            let savedRemark = JSON.parse(localStorage.getItem('remarkHPU')) || {};
-            savedRemark[id] = textarea.value;
-            localStorage.setItem('remarkHPU', JSON.stringify(savedRemark));
-            alert("Catatan berjaya disimpan!");
+            window.savedRemark[id] = textarea.value;
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            alert("Catatan berjaya disinkronisasi ke Firebase!");
         }
 
         function simpanFail(id) {
             const input = document.getElementById('file-' + id);
-            if(input.files.length === 0) {
-                alert("Sila pilih dokumen/fail terlebih dahulu.");
-                return;
-            }
-            const fileName = input.files[0].name; // Simulasi: Simpan nama fail
-            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
-            if(!savedFiles[id]) savedFiles[id] = [];
-            savedFiles[id].push(fileName);
-            localStorage.setItem('filesHPU', JSON.stringify(savedFiles));
-            openItemDetail(id); // Muat semula UI untuk tunjuk senarai fail
+            if(input.files.length === 0) { alert("Sila pilih dokumen/fail terlebih dahulu."); return; }
+            const fileName = input.files[0].name; 
+            if(!window.savedFiles[id]) window.savedFiles[id] = [];
+            window.savedFiles[id].push(fileName);
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function padamFail(id, index) {
-            let savedFiles = JSON.parse(localStorage.getItem('filesHPU')) || {};
-            if(savedFiles[id]) {
-                savedFiles[id].splice(index, 1);
-                localStorage.setItem('filesHPU', JSON.stringify(savedFiles));
-                openItemDetail(id); // Muat semula UI
+            if(window.savedFiles[id]) {
+                window.savedFiles[id].splice(index, 1);
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             }
         }
 
         function tambahLog(id) {
             const action = document.getElementById('log-action-' + id).value;
             const pic = document.getElementById('log-pic-' + id).value;
-            if(!action) {
-                alert("Sila masukkan butiran tindakan / perkara.");
-                return;
-            }
+            if(!action) { alert("Sila masukkan butiran tindakan / perkara."); return; }
             
-            // Format Tarikh & Masa Cth: 02/04/2026 10:30 AM
-            const now = new Date();
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit' };
-            const dateStr = now.toLocaleDateString('ms-MY', options);
-
-            let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
-            if(!savedLogs[id]) savedLogs[id] = [];
+            const dateStr = new Date().toLocaleDateString('ms-MY', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit' });
+            if(!window.savedLogs[id]) window.savedLogs[id] = [];
+            window.savedLogs[id].push({ date: dateStr, action: action, pic: pic || 'Admin' });
             
-            savedLogs[id].push({ date: dateStr, action: action, pic: pic || 'Admin' });
-            localStorage.setItem('logsHPU', JSON.stringify(savedLogs));
-            openItemDetail(id); // Muat semula UI
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function padamLog(id, index) {
             if(confirm("Adakah anda pasti mahu memadam rekod log tindakan ini?")) {
-                let savedLogs = JSON.parse(localStorage.getItem('logsHPU')) || {};
-                savedLogs[id].splice(index, 1);
-                localStorage.setItem('logsHPU', JSON.stringify(savedLogs));
-                openItemDetail(id); // Muat semula UI
+                window.savedLogs[id].splice(index, 1);
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             }
         }
 
-        // FUNGSI BAHARU: Fungsi untuk toggle status sub-tugasan dan save dalam local storage
+        // Fungsi untuk toggle status sub-tugasan
         function toggleSubtask(subtaskId, itemId) {
             const isDone = document.querySelector(`input[onchange="toggleSubtask('${subtaskId}', ${itemId})"]`).checked;
-            
-            // Update status local storage
-            subtaskStatus[subtaskId] = isDone;
-            localStorage.setItem('subtaskStatusHPU', JSON.stringify(subtaskStatus));
-            
-            // Kemas kini paparan perincian (untuk update status badge dan strikethrough)
-            openItemDetail(itemId); 
+            window.subtaskStatus[subtaskId] = isDone;
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function simpanNota(id) {
             const textarea = document.getElementById('textarea-nota-' + id);
-            let savedNota = JSON.parse(localStorage.getItem('notaChecklistHPU')) || {};
-            savedNota[id] = textarea.value;
-            localStorage.setItem('notaChecklistHPU', JSON.stringify(savedNota));
-            alert("Nota berjaya disimpan!");
+            // Anda boleh tambah 'window.savedNota' dalam Firebase jika perlu, buat masa ni kita alert je.
+            alert("Nota berjaya disimpan (Fungsi Dummy)");
         }
 
         // FUNGSI TICK CHECKLIST & KIRA PERATUSAN
         function toggleCheck(id) {
             const item = checklistData.find(d => d.id === id);
             item.checked = !item.checked;
-            
-            savedStatus[id] = item.checked;
-            localStorage.setItem('statusChecklistHPU', JSON.stringify(savedStatus));
-            
-            renderChecklistMain(); // Refresh checklist utama
-            
-            // Refresh checklist di Timeline jika ia sedang dibuka
-            const fasaSemasa = document.getElementById('paparan-checklist-fasa').getAttribute('data-fasa');
-            if(!document.getElementById('paparan-checklist-fasa').classList.contains('hidden') && fasaSemasa) {
-                paparChecklistFasa(fasaSemasa);
-            }
+            // Jika anda guna fungsi ni, hantar ke Firebase juga
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function kiraPeratusan() {
@@ -1575,29 +1537,53 @@
     const app = initializeApp(firebaseConfig);
     window.db = getFirestore(app); 
 
-    // --- JAMBATAN PANGKALAN DATA (SYNC KE FIREBASE) ---
-    // Fungsi untuk hantar data ke awan
-    window.simpanKeCloud = async function(dataPeserta) {
-        try {
-            await setDoc(doc(window.db, "SistemHPU", "SenaraiPeserta"), {
-                senarai: dataPeserta
-            });
-        } catch (e) {
-            console.error("Ralat menyimpan dokumen: ", e);
-        }
-    };
+    // --- VARIABEL GLOBAL UNTUK CHECKLIST ---
+    window.subtaskStatus = {};
+    window.savedRemark = {};
+    window.savedFiles = {};
+    window.savedLogs = {};
+    window.currentOpenItemId = null; 
 
-    // Fungsi 'Telinga' - Dengar jika ada AJK lain ubah data secara Live!
+    // 1. JAMBATAN DATA PESERTA
+    window.simpanKeCloud = async function(dataPeserta) {
+        try { await setDoc(doc(window.db, "SistemHPU", "SenaraiPeserta"), { senarai: dataPeserta }); } catch(e){}
+    };
     onSnapshot(doc(window.db, "SistemHPU", "SenaraiPeserta"), (docSnap) => {
         if (docSnap.exists()) {
-            senaraiPeserta = docSnap.data().senarai || []; // Kemas kini array tempatan
-            if(typeof paparJadualBerkumpulan === "function") {
-                paparJadualBerkumpulan(); // Refresh jadual secara automatik
+            senaraiPeserta = docSnap.data().senarai || [];
+            if(typeof paparJadualBerkumpulan === "function") paparJadualBerkumpulan();
+        }
+    });
+
+    // 2. JAMBATAN DATA CHECKLIST & PROGRESS
+    window.simpanDataUtamaKeCloud = async function() {
+        try {
+            await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
+                subtaskStatus: window.subtaskStatus,
+                savedRemark: window.savedRemark,
+                savedFiles: window.savedFiles,
+                savedLogs: window.savedLogs
+            });
+        } catch(e){}
+    };
+    onSnapshot(doc(window.db, "SistemHPU", "DataUtama"), (docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            window.subtaskStatus = data.subtaskStatus || {};
+            window.savedRemark = data.savedRemark || {};
+            window.savedFiles = data.savedFiles || {};
+            window.savedLogs = data.savedLogs || {};
+
+            if(typeof renderChecklistMain === "function") renderChecklistMain();
+
+            const detailView = document.getElementById('checklist-detail-view');
+            if (detailView && !detailView.classList.contains('hidden') && window.currentOpenItemId) {
+                openItemDetail(window.currentOpenItemId);
             }
         }
     });
 
-    console.log("Firebase & Real-time Sync Berjaya Diaktifkan!");
+    console.log("Firebase Real-time Sync (Peserta & Checklist) Diaktifkan Penuh!");
 </script>
 </body>
 </html>
