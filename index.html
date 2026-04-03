@@ -1050,15 +1050,27 @@
 
             // --- 3. Bahagian Muat Naik Fail ---
             let fileListHTML = currentFiles.map((f, i) => {
-                // Sesuai untuk format lama (string) atau format baharu (object dengan link)
                 let fName = typeof f === 'string' ? f : f.name;
                 let fUrl = typeof f === 'string' ? '#' : f.url;
                 let hoverLink = fUrl !== '#' ? `href="${fUrl}" target="_blank" title="Klik untuk Buka/Muat Turun"` : `href="#" title="Fail simulasi lama tiada pautan"`;
                 
+                // LOGIK IKON DINAMIK: Baca jenis fail (extension) dan tukar ikon & warna
+                let ext = fName.split('.').pop().toLowerCase();
+                let iconClass = "fa-file text-slate-400"; // Ikon fail lalai (kelabu)
+                
+                if (['pdf'].includes(ext)) iconClass = "fa-file-pdf text-red-500";
+                else if (['doc', 'docx'].includes(ext)) iconClass = "fa-file-word text-blue-600";
+                else if (['xls', 'xlsx', 'csv'].includes(ext)) iconClass = "fa-file-excel text-green-600";
+                else if (['ppt', 'pptx'].includes(ext)) iconClass = "fa-file-powerpoint text-orange-500";
+                else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(ext)) iconClass = "fa-file-image text-purple-500";
+                else if (['txt'].includes(ext)) iconClass = "fa-file-alt text-slate-600";
+                else if (['zip', 'rar'].includes(ext)) iconClass = "fa-file-archive text-yellow-600";
+                else if (['mp4', 'mov', 'avi'].includes(ext)) iconClass = "fa-file-video text-pink-500";
+                
                 return `
                 <div class="text-sm text-slate-600 flex justify-between items-center bg-white p-3 border border-slate-200 rounded-lg mb-2 shadow-sm hover:border-blue-300 transition group">
                     <a ${hoverLink} class="truncate font-medium flex-1 cursor-pointer text-slate-700 hover:text-blue-600 transition flex items-center">
-                        <i class="fas fa-file-pdf text-red-500 mr-3 text-lg group-hover:scale-110 transition-transform"></i>
+                        <i class="fas ${iconClass} mr-3 text-lg group-hover:scale-110 transition-transform"></i>
                         <span class="border-b border-transparent group-hover:border-blue-600">${fName}</span>
                     </a> 
                     <button onclick="padamFail(${id}, ${i})" class="text-red-400 hover:text-red-600 hover:bg-red-50 rounded px-3 py-2 transition ml-4 shadow-sm border border-transparent hover:border-red-200"><i class="fas fa-trash text-xs"></i></button>
