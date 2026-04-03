@@ -90,10 +90,11 @@
                         <p class="text-[10px] text-green-600 mt-2 italic">(Klik untuk urus senarai)</p>
                     </div>
                     
-                    <div class="bg-orange-50 border border-orange-200 p-6 rounded-xl text-center">
+                    <div onclick="openTab('timeline')" class="bg-orange-50 border border-orange-200 p-6 rounded-xl text-center cursor-pointer hover:bg-orange-100 hover:shadow-md transition transform hover:-translate-y-1">
                         <i class="fas fa-clock text-4xl text-orange-500 mb-3"></i>
                         <h3 class="text-2xl font-bold text-orange-900">On Track</h3>
                         <p class="text-sm text-orange-700 font-medium">Status Semasa</p>
+                        <p class="text-[10px] text-orange-600 mt-2 italic">(Klik untuk lihat garis masa)</p>
                     </div>
                 </div>
 
@@ -121,12 +122,12 @@
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-lg font-bold"><i class="fas fa-envelope-open-text text-blue-600 mr-2"></i>Jemputan, Kehadiran </h3>
                                 <div class="flex items-center gap-4">
-                                    <span class="text-sm font-bold text-blue-600">75%</span>
+                                    <span id="teks-peratus-pasukan1" class="text-sm font-bold text-blue-600">0%</span>
                                     <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-pasukan1"></i>
                                 </div>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
-                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 75%"></div>
+                                <div id="bar-peratus-pasukan1" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Draf jemputan, surat rasmi dan TOR telah siap. Menunggu kelulusan Pengarah sebelum edaran.</p>
                         </div>
@@ -177,12 +178,12 @@
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-lg font-bold"><i class="fas fa-map-marked-alt text-green-600 mr-2"></i>Logistik, Makanan & Tempat (Venue)</h3>
                                 <div class="flex items-center gap-4">
-                                    <span class="text-sm font-bold text-green-600">60%</span>
+                                    <span id="teks-peratus-pasukan2" class="text-sm font-bold text-green-600">0%</span>
                                     <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-pasukan2"></i>
                                 </div>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
-                                <div class="bg-green-600 h-2.5 rounded-full" style="width: 60%"></div>
+                                <div id="bar-peratus-pasukan2" class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> 3 lokasi hotel/dewan telah disenarai pendek. Sebut harga katering sedang dinilai.</p>
                         </div>
@@ -232,12 +233,12 @@
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-lg font-bold"><i class="fas fa-laptop-code text-purple-600 mr-2"></i>Sistem IT & Pendaftaran (Engagement Portal)</h3>
                                 <div class="flex items-center gap-4">
-                                    <span class="text-sm font-bold text-purple-600">40%</span>
+                                    <span id="teks-peratus-pasukan3" class="text-sm font-bold text-purple-600">0%</span>
                                     <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-pasukan3"></i>
                                 </div>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
-                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 40%"></div>
+                                <div id="bar-peratus-pasukan3" class="bg-purple-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Pembinaan struktur pangkalan data (QR code check-in) dan sistem pengumpulan input kumpulan (State Engagement Portal) telah dimulakan.</p>
                         </div>
@@ -274,12 +275,12 @@
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-lg font-bold"><i class="fas fa-bullhorn text-orange-600 mr-2"></i>Media, Publisiti & Gimik Pelancaran</h3>
                                 <div class="flex items-center gap-4">
-                                    <span class="text-sm font-bold text-orange-600">20%</span>
+                                    <span id="teks-peratus-pasukan4" class="text-sm font-bold text-orange-600">0%</span>
                                     <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-pasukan4"></i>
                                 </div>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
-                                <div class="bg-orange-600 h-2.5 rounded-full" style="width: 20%"></div>
+                                <div id="bar-peratus-pasukan4" class="bg-orange-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                             <p class="text-sm text-slate-600"><span class="font-bold">Status:</span> Perbincangan awal bersama pihak UKK. Lakaran awal 'backdrop' dan konsep montaj sedang dirangka oleh pereka grafik.</p>
                         </div>
@@ -1272,6 +1273,28 @@
 
             const checklistHeaderProg = document.getElementById('progress-checklist-header');
             if(checklistHeaderProg) checklistHeaderProg.innerText = overallPeratus + '%';
+
+            // --- KIRA PERATUSAN DINAMIK UNTUK JAWATANKUASA (PASUKAN 1-4) ---
+            const pasukanIds = ['pasukan1', 'pasukan2', 'pasukan3', 'pasukan4'];
+            pasukanIds.forEach(idPasukan => {
+                // Cari semua checklist yang ditugaskan kepada pasukan ini
+                const assignedItems = checklistData.filter(item => window.pemetaanItemKePasukan && window.pemetaanItemKePasukan[item.id] === idPasukan);
+                
+                let sumPasukan = 0;
+                assignedItems.forEach(item => {
+                    sumPasukan += countItemProgress(item);
+                });
+                
+                // Kira purata peratusan pasukan
+                const purataPasukan = assignedItems.length > 0 ? Math.round(sumPasukan / assignedItems.length) : 0;
+                
+                // Kemas kini Teks & Palang UI
+                const teksEl = document.getElementById(`teks-peratus-${idPasukan}`);
+                const barEl = document.getElementById(`bar-peratus-${idPasukan}`);
+                
+                if (teksEl) teksEl.innerText = purataPasukan + '%';
+                if (barEl) barEl.style.width = purataPasukan + '%';
+            });
 
             // KIRA PERGERAKAN PALANG ANIMASI TIMELINE
             if(typeof dataChecklistFasa !== 'undefined') {
