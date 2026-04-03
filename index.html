@@ -874,6 +874,48 @@
             }
         }
 
+        // --- FUNGSI TAMBAH & PADAM CHECKLIST UTAMA (KESELURUHAN) ---
+        function tambahChecklistUtama() {
+            const tajukBaru = prompt("Sila taip tajuk Senarai Semak Utama yang baharu:");
+            if (!tajukBaru || tajukBaru.trim() === "") return;
+
+            // Jana ID unik (Guna timestamp supaya ID tidak bertindih)
+            const newId = Date.now();
+            const nextNumber = checklistData.length + 1;
+
+            const newItem = {
+                id: newId,
+                title: `${nextNumber}. ${tajukBaru.trim()}`,
+                pic: "Belum Ditetapkan",
+                content: "Sila kemas kini butiran tugasan.",
+                subtasks: []
+            };
+
+            checklistData.push(newItem);
+            
+            // Sync ke Firebase
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            else renderChecklistMain(); // Fallback jika offline
+        }
+
+        function padamChecklistUtama(id) {
+            if(confirm("AWAS: Adakah anda pasti mahu memadam keseluruhan Senarai Semak ini? Segala rekod di dalamnya akan musnah.")) {
+                const index = checklistData.findIndex(d => d.id === id);
+                if (index !== -1) {
+                    checklistData.splice(index, 1);
+                    
+                    // Jika tugasan ini ada di dalam pemetaan AJK (Jawatankuasa), buang juga
+                    if(window.pemetaanItemKePasukan && window.pemetaanItemKePasukan[id]) {
+                        delete window.pemetaanItemKePasukan[id];
+                    }
+
+                    // Sync ke Firebase
+                    if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+                    else renderChecklistMain();
+                }
+            }
+        }
+
         // --- BACA DATA STATUS TERUS DARI FIREBASE ---
         window.subtaskStatus = window.subtaskStatus || {};
 
@@ -897,22 +939,35 @@
                 const progressColor = peratus === 100 ? "text-green-600 bg-green-50 border-green-200" : "text-blue-600 bg-blue-50 border-blue-200";
                 
                 const itemHTML = `
-                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-blue-300 transition bg-white shadow-sm cursor-pointer group" onclick="openItemDetail(${item.id})">
-                        <div class="flex items-center w-3/4">
-                            <div class="p-2 ${progressColor} border rounded mr-3 text-center w-16 h-12 flex justify-center items-center font-black">
+                    <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-blue-300 transition bg-white shadow-sm group">
+                        <div class="flex items-center w-3/4 cursor-pointer" onclick="openItemDetail(${item.id})">
+                            <div class="p-2 ${progressColor} border rounded mr-3 text-center w-16 h-12 flex justify-center items-center font-black flex-shrink-0">
                                 <span class="text-xl">${peratus}%</span>
                             </div>
                             <div class="flex items-center group-hover:text-blue-600 transition truncate pl-1">
                                 <span class="font-medium text-slate-700 truncate">${item.title}</span>
                             </div>
                         </div>
-                        <button class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-blue-200 shadow-sm bg-white group-hover:bg-transparent" title="Edit Perincian">
-                            <i class="fas fa-edit text-lg"></i>
-                        </button>
+                        <div class="flex items-center gap-1">
+                            <button onclick="openItemDetail(${item.id})" class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-blue-200 shadow-sm bg-white group-hover:bg-transparent" title="Edit Perincian">
+                                <i class="fas fa-edit text-sm"></i>
+                            </button>
+                            <button onclick="padamChecklistUtama(${item.id})" class="text-red-400 group-hover:bg-red-100 group-hover:text-red-700 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-red-200 shadow-sm bg-white opacity-0 group-hover:opacity-100" title="Padam Tugasan Utama">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 grid.innerHTML += itemHTML;
             });
+            
+            // Butang [+] Tambah Tugasan Utama Baharu
+            grid.innerHTML += `
+                <div onclick="tambahChecklistUtama()" class="flex justify-center items-center p-4 border-2 border-dashed border-slate-300 rounded-lg hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 text-slate-400 transition cursor-pointer shadow-sm md:col-span-2">
+                    <span class="font-bold text-sm"><i class="fas fa-plus-circle mr-2 text-lg align-middle"></i> Tambah Senarai Semak Utama Baharu</span>
+                </div>
+            `;
+            
             kiraPeratusan(); // Kemas kini progress keseluruhan (dashboard)
         }
 
@@ -994,12 +1049,22 @@
             `;
 
             // --- 3. Bahagian Muat Naik Fail ---
-            let fileListHTML = currentFiles.map((f, i) => `
-                <div class="text-sm text-slate-600 flex justify-between items-center bg-white p-3 border border-slate-200 rounded-lg mb-2 shadow-sm">
-                    <span class="truncate font-medium"><i class="fas fa-file-pdf text-red-500 mr-3 text-lg"></i>${f}</span> 
-                    <button onclick="padamFail(${id}, ${i})" class="text-red-500 hover:text-red-700 bg-red-50 rounded px-3 py-1 transition"><i class="fas fa-trash text-xs"></i></button>
+            let fileListHTML = currentFiles.map((f, i) => {
+                // Sesuai untuk format lama (string) atau format baharu (object dengan link)
+                let fName = typeof f === 'string' ? f : f.name;
+                let fUrl = typeof f === 'string' ? '#' : f.url;
+                let hoverLink = fUrl !== '#' ? `href="${fUrl}" target="_blank" title="Klik untuk Buka/Muat Turun"` : `href="#" title="Fail simulasi lama tiada pautan"`;
+                
+                return `
+                <div class="text-sm text-slate-600 flex justify-between items-center bg-white p-3 border border-slate-200 rounded-lg mb-2 shadow-sm hover:border-blue-300 transition group">
+                    <a ${hoverLink} class="truncate font-medium flex-1 cursor-pointer text-slate-700 hover:text-blue-600 transition flex items-center">
+                        <i class="fas fa-file-pdf text-red-500 mr-3 text-lg group-hover:scale-110 transition-transform"></i>
+                        <span class="border-b border-transparent group-hover:border-blue-600">${fName}</span>
+                    </a> 
+                    <button onclick="padamFail(${id}, ${i})" class="text-red-400 hover:text-red-600 hover:bg-red-50 rounded px-3 py-2 transition ml-4 shadow-sm border border-transparent hover:border-red-200"><i class="fas fa-trash text-xs"></i></button>
                 </div>
-            `).join('');
+                `;
+            }).join('');
 
             let fileUploadHTML = `
                 <div class="mt-8 border-t border-slate-200 pt-6">
@@ -1074,19 +1139,65 @@
             alert("Catatan berjaya disinkronisasi ke Firebase!");
         }
 
-        function simpanFail(id) {
+        async function simpanFail(id) {
             const input = document.getElementById('file-' + id);
             if(input.files.length === 0) { alert("Sila pilih dokumen/fail terlebih dahulu."); return; }
-            const fileName = input.files[0].name; 
-            if(!window.savedFiles[id]) window.savedFiles[id] = [];
-            window.savedFiles[id].push(fileName);
-            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            const file = input.files[0];
+            const fileName = file.name;
+
+            // Tunjuk UI sedang loading
+            const btn = input.nextElementSibling;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memuat Naik...';
+            btn.disabled = true;
+
+            try {
+                // Muat naik fail fizikal ke Firebase Storage
+                if(window.storage && window.storageRef) {
+                    const failPath = `dokumen_checklist/${id}_${Date.now()}_${fileName}`;
+                    const fileRef = window.storageRef(window.storage, failPath);
+                    const snapshot = await window.uploadBytes(fileRef, file);
+                    const pautanURL = await window.getDownloadURL(snapshot.ref);
+
+                    if(!window.savedFiles[id]) window.savedFiles[id] = [];
+                    // Simpan pautan (URL) dan nama ke Firestore
+                    window.savedFiles[id].push({ name: fileName, url: pautanURL, path: failPath });
+                } else {
+                    // Fallback jika Firebase Storage belum siap
+                    if(!window.savedFiles[id]) window.savedFiles[id] = [];
+                    window.savedFiles[id].push({ name: fileName, url: "#", path: "" });
+                }
+
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+                input.value = ""; // Kosongkan input
+                alert("Dokumen berjaya dimuat naik & sedia untuk dimuat turun!");
+            } catch(e) {
+                console.error("Ralat muat naik:", e);
+                alert("Ralat memuat naik! Pastikan Firebase Storage telah diaktifkan dalam mode ujian.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
-        function padamFail(id, index) {
-            if(window.savedFiles[id]) {
-                window.savedFiles[id].splice(index, 1);
-                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+        async function padamFail(id, index) {
+            // Pengesahan sebelum memadam
+            if(confirm("AWAS: Adakah anda pasti mahu memadam dokumen ini? Tindakan ini tidak boleh diundurkan.")) {
+                if(window.savedFiles[id]) {
+                    const failTarget = window.savedFiles[id][index];
+                    
+                    // Cuba padam fail fizikal dari Firebase Storage jika ia ada path
+                    if(failTarget && failTarget.path && window.storage && window.deleteObject) {
+                        try {
+                            const fileRef = window.storageRef(window.storage, failTarget.path);
+                            await window.deleteObject(fileRef);
+                        } catch(e) { console.error("Gagal memadam fail fizikal:", e); }
+                    }
+
+                    // Padam rekod pautan dari pangkalan data Firestore
+                    window.savedFiles[id].splice(index, 1);
+                    if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+                }
             }
         }
 
@@ -1727,6 +1838,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    // Tambahan Import untuk Firebase Storage
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAuYCFE-Alg4ukGETe4VVRm-4VxetfZkTQ",
@@ -1740,6 +1853,13 @@
 
     const app = initializeApp(firebaseConfig);
     window.db = getFirestore(app); 
+
+    // Eksport Fungsi Storage ke global window supaya boleh diguna oleh fungsi lama
+    window.storage = getStorage(app);
+    window.storageRef = ref;
+    window.uploadBytes = uploadBytes;
+    window.getDownloadURL = getDownloadURL;
+    window.deleteObject = deleteObject;
 
     // --- VARIABEL GLOBAL UNTUK CHECKLIST ---
     window.subtaskStatus = {};
