@@ -19,7 +19,7 @@
     <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
             <div>
-                <h1 class="text-xl md:text-2xl font-bold tracking-wide">Digital Health Blueprint</h1>
+                <h1 class="text-xl md:text-2xl font-bold tracking-wide">Progres Digital Health Blueprint</h1>
                 <p class="text-xs md:text-sm text-blue-200">Kemas Kini Status: <span id="minggu-semasa-header">Minggu 1</span> (Pembentangan Pengarah)</p>
             </div>
             <div class="text-right hidden md:flex items-center gap-4">
@@ -77,6 +77,28 @@
                     <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-red-50 border border-red-300 rounded shadow-sm"></div> Bengkel (19-21 Mei)</div>
                     <div class="flex items-center gap-2 font-medium mt-2 pt-2 border-t border-slate-200"><i class="fas fa-hand-pointer text-slate-400"></i> Klik tarikh untuk tambah memo</div>
                 </div>
+            </div>
+
+            <div class="mt-6 bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl p-5 shadow-lg border border-blue-700 text-white relative overflow-hidden group">
+                <i class="fas fa-hourglass-half absolute -right-4 -bottom-4 text-6xl text-white opacity-10 group-hover:scale-110 transition-transform duration-500"></i>
+                
+                <h4 class="text-[11px] font-bold text-blue-200 uppercase tracking-wider mb-4 flex items-center"><i class="fas fa-stopwatch mr-2 text-orange-400 text-sm"></i> Kiraan Detik Bengkel</h4>
+                
+                <div class="flex justify-between items-center text-center gap-2">
+                    <div class="bg-blue-950/60 rounded-lg p-2 flex-1 border border-blue-800/50 shadow-inner">
+                        <span id="count-hari" class="block text-2xl font-black text-white tracking-tighter">00</span>
+                        <span class="text-[9px] font-medium text-blue-300 uppercase">Hari</span>
+                    </div>
+                    <div class="bg-blue-950/60 rounded-lg p-2 flex-1 border border-blue-800/50 shadow-inner">
+                        <span id="count-jam" class="block text-2xl font-black text-white tracking-tighter">00</span>
+                        <span class="text-[9px] font-medium text-blue-300 uppercase">Jam</span>
+                    </div>
+                    <div class="bg-blue-950/60 rounded-lg p-2 flex-1 border border-blue-800/50 shadow-inner">
+                        <span id="count-minit" class="block text-2xl font-black text-white tracking-tighter">00</span>
+                        <span class="text-[9px] font-medium text-blue-300 uppercase">Minit</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-blue-300 mt-4 text-center italic border-t border-blue-800/50 pt-2">Sasar: 19 Mei 2026, 08:00 PG</p>
             </div>
         </aside>
 
@@ -1833,6 +1855,36 @@
             document.getElementById('tarikh-semasa-header').innerText = formatTarikh;
         }
 
+        // FUNGSI KIRAAN DETIK (COUNTDOWN)
+        function mulakanKiraanDetik() {
+            const tarikhBengkel = new Date("May 19, 2026 08:00:00").getTime();
+
+            const x = setInterval(function() {
+                const sekarang = new Date().getTime();
+                const jarak = tarikhBengkel - sekarang;
+
+                if (jarak < 0) {
+                    clearInterval(x);
+                    if(document.getElementById("count-hari")) {
+                        document.getElementById("count-hari").innerText = "00";
+                        document.getElementById("count-jam").innerText = "00";
+                        document.getElementById("count-minit").innerText = "00";
+                    }
+                    return;
+                }
+
+                const hari = Math.floor(jarak / (1000 * 60 * 60 * 24));
+                const jam = Math.floor((jarak % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minit = Math.floor((jarak % (1000 * 60 * 60)) / (1000 * 60));
+
+                if(document.getElementById("count-hari")) {
+                    document.getElementById("count-hari").innerText = hari < 10 ? '0'+hari : hari;
+                    document.getElementById("count-jam").innerText = jam < 10 ? '0'+jam : jam;
+                    document.getElementById("count-minit").innerText = minit < 10 ? '0'+minit : minit;
+                }
+            }, 1000);
+        }
+
         function kiraMingguSemasa() {
             // Tarikh mula projek disetkan pada Isnin, 30 Mac 2026.
             // Dengan ini, bermula Isnin (6 April 2026), ia akan automatik dikira sebagai "Minggu 2"
@@ -2162,7 +2214,8 @@
             kiraMingguSemasa();      
             renderKalendar();        
             renderMindMap();         
-            renderFokusUtama();      
+            renderFokusUtama();
+            mulakanKiraanDetik();    // Aktifkan Kiraan Detik Bengkel
         };
 
         const senaraiAJK = {
