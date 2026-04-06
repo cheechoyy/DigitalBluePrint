@@ -20,11 +20,22 @@
         <div class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
             <div>
                 <h1 class="text-xl md:text-2xl font-bold tracking-wide">Digital Health Blueprint</h1>
-                <p class="text-xs md:text-sm text-blue-200">Kemas Kini Status: Minggu 1 (Pembentangan Pengarah)</p>
+                <p class="text-xs md:text-sm text-blue-200">Kemas Kini Status: <span id="minggu-semasa-header">Minggu 1</span> (Pembentangan Pengarah)</p>
             </div>
-            <div class="text-right hidden md:block">
-                <p class="text-sm text-blue-100">Tarikh Semasa: <span id="tarikh-semasa-header" class="font-bold text-white tracking-wide">Memuatkan...</span></p>
-                <p class="text-xs text-blue-300 mt-1">HPU, Kementerian Kesihatan Malaysia</p>
+            <div class="text-right hidden md:flex items-center gap-4">
+                <div class="text-right border-r border-blue-700 pr-4">
+                    <p class="text-sm text-blue-100">Tarikh Semasa: <span id="tarikh-semasa-header" class="font-bold text-white tracking-wide">Memuatkan...</span></p>
+                    <p class="text-xs text-blue-300 mt-1">HPU, Kementerian Kesihatan Malaysia</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-xs text-blue-300 mb-1">Log Masuk Sebagai:</span>
+                    <button onclick="bukaModalIdentiti()" class="bg-blue-800 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded-full flex items-center transition shadow border border-blue-600">
+                        <i class="fas fa-user-circle mr-2"></i> <span id="paparan-nama-pengguna">Tetamu</span>
+                    </button>
+                </div>
+                <button onclick="toggleLogAktiviti()" class="ml-2 relative bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-50 transition shadow-lg transform hover:scale-105">
+                    <i class="fas fa-history text-lg"></i>
+                </button>
             </div>
         </div>
     </header>
@@ -72,7 +83,7 @@
         <main class="w-full md:w-3/4">
             
             <div id="dashboard" class="tab-content active bg-white rounded-xl shadow-md p-8 border border-slate-100">
-                <h2 class="text-3xl font-bold text-slate-800 border-b pb-4 mb-6">Ringkasan Eksekutif (Minggu 1)</h2>
+                <h2 class="text-3xl font-bold text-slate-800 border-b pb-4 mb-6">Ringkasan Eksekutif (<span id="minggu-semasa-dash">Minggu 1</span>)</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div onclick="openTab('stakeholders')" class="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center cursor-pointer hover:bg-blue-100 hover:shadow-md transition transform hover:-translate-y-1">
@@ -98,19 +109,27 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                    <h3 class="text-lg font-bold mb-3 text-slate-800"><i class="fas fa-bullseye text-red-500 mr-2"></i>Fokus Utama Pembentangan Hari Ini:</h3>
-                    <ul class="list-disc ml-6 space-y-2 text-slate-700">
-                        <li>Memohon pengesahan bajet dan pelantikan rasmi senarai jawatankuasa (Chief Sec/CDO).</li>
-                        <li>Membentangkan status kemajuan persediaan logistik dan senarai nama jemputan wakil agensi.</li>
-                        <li>Memuktamadkan draf Surat Jemputan & Terma Rujukan (TOR) untuk diedarkan.</li>
-                    </ul>
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 relative group">
+                    <h3 class="text-lg font-bold mb-4 text-slate-800 flex justify-between items-center">
+                        <span><i class="fas fa-bullseye text-red-500 mr-2"></i>Fokus Utama Pembentangan:</span>
+                        <button onclick="toggleFokusEditMode()" class="text-xs font-semibold text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1.5 rounded transition shadow-sm"><i class="fas fa-edit mr-1"></i>Urus Fokus</button>
+                    </h3>
+                    
+                    <ul id="senarai-fokus-utama" class="list-none space-y-3 text-slate-700">
+                        </ul>
+                    
+                    <div id="ruang-tambah-fokus" class="hidden mt-5 pt-4 border-t border-slate-200 border-dashed">
+                        <div class="flex gap-2">
+                            <input type="text" id="input-fokus-baharu" placeholder="Taip fokus pembentangan baharu..." class="w-full p-2.5 text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" onkeypress="if(event.key === 'Enter') tambahFokusUtama()">
+                            <button onclick="tambahFokusUtama()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap"><i class="fas fa-plus"></i> Tambah</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="jawatankuasa" class="tab-content bg-white rounded-xl shadow-md p-8 border border-slate-100">
                 <div class="flex justify-between items-center border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-slate-800">Laporan Kemajuan Portfolio (Minggu 1)</h2>
+                    <h2 class="text-3xl font-bold text-slate-800">Laporan Kemajuan Portfolio (<span id="minggu-semasa-port">Minggu 1</span>)</h2>
                 </div>
                 
                 <p class="text-sm text-slate-500 mb-6 italic"><i class="fas fa-hand-pointer mr-1"></i> Klik pada mana-mana kotak portfolio di bawah untuk melihat senarai 17 AJK dan tugasan spesifik mereka.</p>
@@ -589,6 +608,32 @@
             </div>
 
         </main>
+    </main>
+    </div>
+
+    <div id="modal-identiti" class="hidden fixed inset-0 bg-slate-900 bg-opacity-80 z-[1000] flex justify-center items-center backdrop-blur-md">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-96 transform transition-all text-center">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg">
+                <i class="fas fa-user-check text-4xl text-blue-600"></i>
+            </div>
+            <h3 class="font-black text-2xl text-slate-800 mb-2">Selamat Datang!</h3>
+            <p class="text-sm text-slate-500 mb-6">Sila pilih nama AJK anda untuk merekod log kemas kini ke dalam sistem Blueprint.</p>
+            
+            <div id="pilihan-nama-container" class="space-y-3 mb-4 max-h-60 overflow-y-auto pr-2">
+                </div>
+            
+            <p class="text-xs text-slate-400 mt-4 italic">Nama anda tidak tersenarai? Sila minta admin menambah profil anda.</p>
+        </div>
+    </div>
+
+    <div id="laci-log" class="fixed top-0 right-0 h-full w-80 bg-slate-50 shadow-2xl transform translate-x-full transition-transform duration-300 z-[990] flex flex-col border-l border-slate-200">
+        <div class="bg-blue-900 text-white p-4 flex justify-between items-center shadow-md z-10">
+            <h3 class="font-bold text-lg"><i class="fas fa-list-alt mr-2 text-blue-300"></i>Log Aktiviti Semasa</h3>
+            <button onclick="toggleLogAktiviti()" class="text-blue-200 hover:text-white hover:bg-blue-800 w-8 h-8 rounded transition"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="senarai-log-global" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+            <p class="text-xs text-center text-slate-400 italic mt-10">Sistem merekod segala tindakan di sini...</p>
+        </div>
     </div>
 
     <div id="modal-memo" class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 z-[999] flex justify-center items-center backdrop-blur-sm">
@@ -620,6 +665,105 @@
     </div>
 
     <script>
+        // --- SISTEM IDENTITI PENGGUNA & LOG GLOBAL ---
+        let penggunaSemasa = localStorage.getItem('BlueprintPengguna') || null;
+        window.globalActivityLog = window.globalActivityLog || [];
+
+        // FUNGSI BARU: Jana butang pilihan nama secara dinamik
+        function renderPilihanNamaAJK() {
+            const container = document.getElementById('pilihan-nama-container');
+            if(!container || !window.dataAJK) return;
+
+            // Dapatkan senarai nama unik daripada window.dataAJK dan susun mengikut abjad
+            const uniqueNames = [...new Set(window.dataAJK.map(ajk => ajk.name))].sort();
+
+            if(uniqueNames.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 italic">Tiada nama AJK didaftarkan.</p>';
+                return;
+            }
+
+            container.innerHTML = uniqueNames.map(name => `
+                <button onclick="simpanPengguna('${name}')" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 font-bold py-3 rounded-xl transition shadow-sm hover:shadow-md transform hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                    <i class="fas fa-user-circle text-blue-500 group-hover:text-white"></i> ${name}
+                </button>
+            `).join('');
+        }
+
+        function semakPengguna() {
+            if(!penggunaSemasa) {
+                renderPilihanNamaAJK(); // TAMBAHAN: Jana pilihan nama
+                document.getElementById('modal-identiti').classList.remove('hidden');
+            } else {
+                document.getElementById('paparan-nama-pengguna').innerText = penggunaSemasa;
+            }
+        }
+
+        function bukaModalIdentiti() {
+            renderPilihanNamaAJK(); // TAMBAHAN: Jana pilihan nama
+            document.getElementById('modal-identiti').classList.remove('hidden');
+        }
+
+        function simpanPengguna(nama) {
+            // Menerima nama terus daripada butang yang diklik
+            if(!nama) { alert("Sila pilih nama anda terlebih dahulu."); return; }
+            penggunaSemasa = nama;
+            localStorage.setItem('BlueprintPengguna', nama);
+            document.getElementById('paparan-nama-pengguna').innerText = nama;
+            document.getElementById('modal-identiti').classList.add('hidden');
+            rekodLogGlobal("Log Masuk ke dalam sistem", "Sistem Utama");
+        }
+
+        function toggleLogAktiviti() {
+            const laci = document.getElementById('laci-log');
+            if (laci.classList.contains('translate-x-full')) {
+                laci.classList.remove('translate-x-full');
+            } else {
+                laci.classList.add('translate-x-full');
+            }
+            renderLogGlobal();
+        }
+
+        function rekodLogGlobal(aktiviti, seksyen) {
+            const masaSekarang = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            const logBaharu = {
+                nama: penggunaSemasa || "Tetamu",
+                aktiviti: aktiviti,
+                seksyen: seksyen,
+                masa: masaSekarang
+            };
+            
+            // Masukkan ke posisi paling atas (terkini)
+            window.globalActivityLog.unshift(logBaharu);
+            
+            // Hadkan log kepada 50 rekod terakhir supaya pangkalan data tidak berat
+            if (window.globalActivityLog.length > 50) window.globalActivityLog.pop(); 
+            
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            renderLogGlobal();
+        }
+
+        function renderLogGlobal() {
+            const container = document.getElementById('senarai-log-global');
+            if(!container) return;
+
+            if(window.globalActivityLog.length === 0) {
+                container.innerHTML = '<p class="text-xs text-center text-slate-400 italic mt-10">Belum ada sebarang aktiviti direkodkan.</p>';
+                return;
+            }
+
+            container.innerHTML = window.globalActivityLog.map(log => `
+                <div class="bg-white p-3 rounded-lg shadow-sm border-l-2 border-blue-500 relative">
+                    <p class="text-[11px] font-bold text-blue-600 mb-1"><i class="fas fa-user-circle mr-1"></i>${log.nama}</p>
+                    <p class="text-xs text-slate-700 leading-snug">${log.aktiviti}</p>
+                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${log.seksyen}</span>
+                        <span class="text-[9px] text-slate-500"><i class="far fa-clock mr-1"></i>${log.masa}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // --- FUNGSI TAB ---
         function openTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
@@ -640,8 +784,11 @@
                 activeBtn.classList.add('bg-blue-100', 'text-blue-800', 'font-semibold');
             }
 
-            // Reset view bila tukar tab
-            if(tabName === 'checklist') closeItemDetail();
+            // Reset view bila tukar tab secara manual (Asingkan dari fungsi 'Kembali Pintar')
+            if(tabName === 'checklist') {
+                document.getElementById('checklist-detail-view').classList.add('hidden');
+                document.getElementById('checklist-main-view').classList.remove('hidden');
+            }
         }
 
         // --- DATA STRUKTUR SUB-KATEGORI (DATABASE REFERENCE) ---
@@ -941,7 +1088,7 @@
                 
                 const itemHTML = `
                     <div class="flex justify-between items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-blue-300 transition bg-white shadow-sm group">
-                        <div class="flex items-center w-3/4 cursor-pointer" onclick="openItemDetail(${item.id})">
+                        <div class="flex items-center w-3/4 cursor-pointer" onclick="window.asalTabPerincian='checklist'; openItemDetail(${item.id})">
                             <div class="p-2 ${progressColor} border rounded mr-3 text-center w-16 h-12 flex justify-center items-center font-black flex-shrink-0">
                                 <span class="text-xl">${peratus}%</span>
                             </div>
@@ -950,7 +1097,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-1">
-                            <button onclick="openItemDetail(${item.id})" class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-blue-200 shadow-sm bg-white group-hover:bg-transparent" title="Edit Perincian">
+                            <button onclick="window.asalTabPerincian='checklist'; openItemDetail(${item.id})" class="text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-blue-200 shadow-sm bg-white group-hover:bg-transparent" title="Edit Perincian">
                                 <i class="fas fa-edit text-sm"></i>
                             </button>
                             <button onclick="padamChecklistUtama(${item.id})" class="text-red-400 group-hover:bg-red-100 group-hover:text-red-700 w-8 h-8 rounded-full flex items-center justify-center transition border border-transparent hover:border-red-200 shadow-sm bg-white opacity-0 group-hover:opacity-100" title="Padam Tugasan Utama">
@@ -973,9 +1120,22 @@
         }
 
         // FUNGSI BUTANG KEMBALI
+        window.asalTabPerincian = 'checklist'; // Memori lalai (default)
+
         function closeItemDetail() {
             document.getElementById('checklist-detail-view').classList.add('hidden');
-            document.getElementById('checklist-main-view').classList.remove('hidden');
+            
+            // Baca memori dari mana AJK ini datang
+            if (window.asalTabPerincian === 'jawatankuasa') {
+                openTab('jawatankuasa');
+            } else if (window.asalTabPerincian === 'timeline') {
+                openTab('timeline');
+            } else {
+                // Jika dari Senarai Semak Utama, kembali ke paparan asalnya
+                document.getElementById('checklist-main-view').classList.remove('hidden');
+            }
+            
+            window.asalTabPerincian = 'checklist'; // Reset semula memori
         }
 
         function openItemDetail(id) {
@@ -1040,12 +1200,40 @@
             let currentFiles = window.savedFiles[id] || [];
             let currentLogs = window.savedLogs[id] || [];
 
+            // Proses data catatan (Penyelarasan rekod lama vs baharu)
+            let rekodCatatan = [];
+            if(typeof currentRemark === 'string') {
+                if(currentRemark.trim() !== "") rekodCatatan.push({ teks: currentRemark, tarikh: "Rekod Lama" });
+            } else if (Array.isArray(currentRemark)) {
+                rekodCatatan = currentRemark;
+            }
+
+            // HTML Senarai Catatan Terdahulu
+            let senaraiCatatanHTML = rekodCatatan.map((rekod, idx) => `
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg mb-2 shadow-sm relative group">
+                    <p class="text-sm text-slate-700 whitespace-pre-wrap">${rekod.teks}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-[10px] font-bold text-blue-500"><i class="far fa-clock mr-1"></i>${rekod.tarikh}</span>
+                        <button onclick="padamRemark(${id}, ${idx})" class="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition" title="Padam Catatan"><i class="fas fa-trash text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
             // --- 2. Bahagian Catatan (Remarks) ---
             let remarkHTML = `
                 <div class="mt-8 border-t border-slate-200 pt-6">
-                    <h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-edit mr-2 text-blue-500"></i>Catatan Tambahan (Remarks)</h4>
-                    <textarea id="remark-${id}" class="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white mb-2 shadow-inner" placeholder="Taip catatan, isu berbangkit atau pautan rujukan di sini...">${currentRemark}</textarea>
-                    <button onclick="simpanRemark(${id})" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-sm"><i class="fas fa-save mr-2"></i>Simpan Catatan</button>
+                    <h4 class="font-bold text-slate-700 text-sm uppercase mb-3"><i class="fas fa-comments mr-2 text-blue-500"></i>Catatan Tambahan & Isu (Remarks)</h4>
+                    
+                    <div id="senarai-remark-${id}" class="mb-4 max-h-48 overflow-y-auto pr-2 space-y-2">
+                        ${senaraiCatatanHTML || '<p class="text-xs text-slate-400 italic mb-4">Tiada catatan diletakkan lagi.</p>'}
+                    </div>
+
+                    <div class="relative bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        <textarea id="remark-${id}" class="w-full h-16 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white mb-2 shadow-inner" placeholder="Taip catatan, kemas kini atau isu berbangkit di sini..."></textarea>
+                        <div class="text-right">
+                            <button onclick="simpanRemark(${id})" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-sm"><i class="fas fa-paper-plane mr-2"></i>Hantar Catatan</button>
+                        </div>
+                    </div>
                 </div>
             `;
 
@@ -1147,9 +1335,37 @@
         // --- FUNGSI TAMBAHAN (CATATAN, FAIL & LOG TINDAKAN) (HANTAR KE FIREBASE) ---
         function simpanRemark(id) {
             const textarea = document.getElementById('remark-' + id);
-            window.savedRemark[id] = textarea.value;
+            const teks = textarea.value.trim();
+            if(!teks) return;
+
+            // Semak format data (jika rekod lama berbentuk teks tunggal, kita jadikan ia array)
+            let rawRemark = window.savedRemark[id] || [];
+            if(typeof rawRemark === 'string') {
+                rawRemark = rawRemark.trim() !== "" ? [{teks: rawRemark, tarikh: "Rekod Lama"}] : [];
+            }
+            
+            // Dapatkan masa sebenar
+            const masaSekarang = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            
+            // Tolak rekod baharu ke dalam senarai
+            rawRemark.push({ teks: teks, tarikh: masaSekarang });
+            window.savedRemark[id] = rawRemark;
+            
+            rekodLogGlobal("Menambah catatan baharu", "Senarai Semak (ID Tugasan: " + id + ")"); // TAMBAHAN: Rekod Log
+            
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
-            alert("Catatan berjaya disinkronisasi ke Firebase!");
+            // Tidak perlu alert lagi, UI akan auto-refresh dari Firebase!
+        }
+
+        function padamRemark(id, index) {
+            if(confirm("Adakah anda pasti mahu memadam catatan ini?")) {
+                let rawRemark = window.savedRemark[id] || [];
+                if(typeof rawRemark === 'string') return; // Elak ralat jika format data lama
+                rawRemark.splice(index, 1);
+                window.savedRemark[id] = rawRemark;
+                
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            }
         }
 
         async function simpanFail(id) {
@@ -1237,6 +1453,10 @@
         function toggleSubtask(subtaskId, itemId) {
             const isDone = document.querySelector(`input[onchange="toggleSubtask('${subtaskId}', ${itemId})"]`).checked;
             window.subtaskStatus[subtaskId] = isDone;
+            
+            let statusTeks = isDone ? "Tandakan (Selesai)" : "Nyah-tandakan (Belum Selesai)";
+            rekodLogGlobal(statusTeks + " pada sub-tugasan", "Senarai Semak (ID Tugasan: " + itemId + ")"); // TAMBAHAN: Rekod Log
+            
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
@@ -1363,7 +1583,7 @@
                 const percentColor = peratus === 100 ? 'text-green-700' : 'text-blue-700';
 
                 senaraiContainer.innerHTML += `
-                    <div onclick="openItemDetail(${id})" class="relative overflow-hidden flex items-center p-3 border border-slate-200 bg-white rounded-lg shadow-sm hover:border-blue-400 cursor-pointer transition group">
+                    <div onclick="lompatKePerincianChecklist(${id}, 'timeline')" class="relative overflow-hidden flex items-center p-3 border border-slate-200 bg-white rounded-lg shadow-sm hover:border-blue-400 cursor-pointer transition group">
                         
                         <div class="absolute left-0 top-0 bottom-0 ${bgCecair} opacity-60 transition-all duration-1000 ease-in-out" style="width: ${peratus}%;"></div>
                         
@@ -1546,7 +1766,8 @@
         }
 
         // FUNGSI BANTUAN INTERAKTIF
-        function lompatKePerincianChecklist(id) {
+        function lompatKePerincianChecklist(id, tabAsal = 'jawatankuasa') {
+            window.asalTabPerincian = tabAsal; // Merekod dari mana pengguna klik (lalai: jawatankuasa)
             openTab('checklist'); // Lompat ke tab Checklist
             setTimeout(() => { openItemDetail(id); }, 150); // Buka panel detail
         }
@@ -1576,6 +1797,31 @@
             const pilihanFormat = { day: 'numeric', month: 'long', year: 'numeric' };
             const formatTarikh = new Date().toLocaleDateString('ms-MY', pilihanFormat);
             document.getElementById('tarikh-semasa-header').innerText = formatTarikh;
+        }
+
+        function kiraMingguSemasa() {
+            // Tarikh mula projek disetkan pada Isnin, 30 Mac 2026.
+            // Dengan ini, bermula Isnin (6 April 2026), ia akan automatik dikira sebagai "Minggu 2"
+            const tarikhMula = new Date('2026-03-30T00:00:00');
+            const harini = new Date();
+            
+            // Kira perbezaan masa (dalam unit hari)
+            const bezaHari = Math.floor((harini - tarikhMula) / (1000 * 60 * 60 * 24));
+            let mingguKe = Math.floor(bezaHari / 7) + 1;
+            
+            // Had masa (Tarikh bengkel bermula 19 Mei 2026)
+            const tarikhBengkel = new Date('2026-05-19T00:00:00');
+            let teksMinggu = "Minggu " + Math.max(1, mingguKe); 
+            
+            // Tukar tajuk jika sudah tiba hari bengkel
+            if (harini >= tarikhBengkel) {
+                teksMinggu = "Fasa Bengkel";
+            }
+
+            // Kemas kini ke-3 paparan di HTML
+            if(document.getElementById('minggu-semasa-header')) document.getElementById('minggu-semasa-header').innerText = teksMinggu;
+            if(document.getElementById('minggu-semasa-dash')) document.getElementById('minggu-semasa-dash').innerText = teksMinggu;
+            if(document.getElementById('minggu-semasa-port')) document.getElementById('minggu-semasa-port').innerText = teksMinggu;
         }
 
         function renderKalendar() {
@@ -1774,15 +2020,100 @@
             }
         }
 
+        // --- PENGURUSAN FOKUS UTAMA PEMBENTANGAN ---
+        window.lalaiFokusUtama = [
+            { teks: "Memohon pengesahan bajet dan pelantikan rasmi senarai jawatankuasa (Chief Sec/CDO).", tarikh: "Rekod Asal" },
+            { teks: "Membentangkan status kemajuan persediaan logistik dan senarai nama jemputan wakil agensi.", tarikh: "Rekod Asal" },
+            { teks: "Memuktamadkan draf Surat Jemputan & Terma Rujukan (TOR) untuk diedarkan.", tarikh: "Rekod Asal" }
+        ];
+        window.dataFokusUtama = window.dataFokusUtama || window.lalaiFokusUtama;
+        let isFokusEditMode = false;
+
+        function renderFokusUtama() {
+            const container = document.getElementById('senarai-fokus-utama');
+            if(!container) return;
+            
+            if(window.dataFokusUtama.length === 0) {
+                container.innerHTML = '<li class="text-sm text-slate-400 italic py-2">Tiada fokus pembentangan ditetapkan.</li>';
+                return;
+            }
+
+            container.innerHTML = window.dataFokusUtama.map((fokusItem, index) => {
+                // Logik untuk menyokong format teks lama (Firebase sedia ada) & format baharu (bersama masa)
+                let teksFokus = typeof fokusItem === 'string' ? fokusItem : fokusItem.teks;
+                let tarikhFokus = typeof fokusItem === 'string' ? 'Rekod Asal' : (fokusItem.tarikh || 'Rekod Asal');
+
+                return `
+                <li class="flex items-start justify-between bg-blue-50/50 p-3 rounded-r-lg border-l-4 border-blue-500 shadow-sm group transition-all hover:bg-blue-100">
+                    <div class="flex flex-col w-full">
+                        <span class="text-sm leading-relaxed text-slate-700">${teksFokus}</span>
+                        <div class="mt-2 text-[10px] font-bold text-blue-500 flex items-center">
+                            <i class="far fa-clock mr-1"></i>${tarikhFokus}
+                        </div>
+                    </div>
+                    <button onclick="padamFokusUtama(${index})" class="${isFokusEditMode ? 'block' : 'hidden'} text-red-400 hover:text-red-600 hover:bg-white p-1.5 rounded transition ml-3 flex-shrink-0" title="Padam Fokus Ini">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                </li>
+                `;
+            }).join('');
+        }
+
+        function toggleFokusEditMode() {
+            isFokusEditMode = !isFokusEditMode;
+            const ruangTambah = document.getElementById('ruang-tambah-fokus');
+            
+            if(isFokusEditMode) {
+                ruangTambah.classList.remove('hidden');
+            } else {
+                ruangTambah.classList.add('hidden');
+            }
+            renderFokusUtama(); // Refresh untuk tunjuk/sorok butang tong sampah
+        }
+
+        function tambahFokusUtama() {
+            const input = document.getElementById('input-fokus-baharu');
+            const teks = input.value.trim();
+            
+            if(!teks) return;
+            
+            // Jana masa sebenar apabila AJK menekan butang tambah
+            const masaSekarang = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            
+            // Tolak sebagai sebuah objek yang mengandungi teks & tarikh
+            window.dataFokusUtama.push({ teks: teks, tarikh: masaSekarang });
+            input.value = ''; // Kosongkan kotak
+            
+            rekodLogGlobal(`Menambah fokus utama baharu`, `Ringkasan Eksekutif`); // TAMBAHAN: Rekod Log
+            
+            // Sync ke Firebase
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            else renderFokusUtama();
+        }
+
+        function padamFokusUtama(index) {
+            if(confirm("Padam fokus pembentangan ini?")) {
+                window.dataFokusUtama.splice(index, 1);
+                
+                // Sync ke Firebase
+                if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+                else renderFokusUtama();
+            }
+        }
+
         // --- MENGGERAKKAN KESEMUA SISTEM KETIKA LAMAN DIBUKA ---
         window.onload = function() {
+            semakPengguna();         // Check Identiti AJK
+            renderLogGlobal();       // Render Laci Aktiviti
             paparJadualBerkumpulan();
             renderChecklistMain();
             renderSemuaAJK();        
             renderTugasanPasukan(); 
-            kemasKiniTarikhHeader(); // Aktifkan tarikh header
-            renderKalendar();        // Render bentuk kalendar
-            renderMindMap();         // Render Peta Minda Interaktif
+            kemasKiniTarikhHeader(); 
+            kiraMingguSemasa();      
+            renderKalendar();        
+            renderMindMap();         
+            renderFokusUtama();      
         };
 
         const senaraiAJK = {
@@ -1914,7 +2245,7 @@
         }
     });
 
-    // 2. JAMBATAN DATA KESELURUHAN (TERMASUK DINAMIK SUB-TUGASAN)
+    // 2. JAMBATAN DATA KESELURUHAN (TERMASUK DINAMIK SUB-TUGASAN & FOKUS)
     window.simpanDataUtamaKeCloud = async function() {
         try {
             await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
@@ -1925,7 +2256,9 @@
                 dataAJK: window.dataAJK || window.lalaiDataAJK,
                 pemetaanTugasan: window.pemetaanItemKePasukan || window.lalaiPemetaan,
                 kalendarMemos: window.kalendarMemos || {},
-                checklistStruktur: checklistData // Simpan struktur subtugasan yg diedit
+                checklistStruktur: checklistData, 
+                dataFokusUtama: window.dataFokusUtama || window.lalaiFokusUtama,
+                globalActivityLog: window.globalActivityLog || [] // TAMBAHAN: Simpan Log Aktiviti
             });
         } catch(e) {
             console.error("Firebase Gagal Menyimpan:", e);
@@ -1941,9 +2274,20 @@
             window.dataAJK = data.dataAJK || window.lalaiDataAJK;
             window.pemetaanItemKePasukan = data.pemetaanTugasan || window.lalaiPemetaan;
             window.kalendarMemos = data.kalendarMemos || {};
+            window.dataFokusUtama = data.dataFokusUtama || window.lalaiFokusUtama; // Baca Fokus Utama
+            window.globalActivityLog = data.globalActivityLog || []; // TAMBAHAN: Baca Log Aktiviti
+            if(typeof renderLogGlobal === "function") renderLogGlobal(); // Refresh UI Laci Log
+            
             if(data.checklistStruktur) {
-                checklistData = data.checklistStruktur; // Kemas kini struktur data dari awan
+                checklistData = data.checklistStruktur; 
             }
+
+            // Auto-refresh UI secara live
+            if(typeof renderFokusUtama === "function") renderFokusUtama(); // Refresh Fokus Utama
+            if(typeof renderChecklistMain === "function") renderChecklistMain();
+            if(typeof renderSemuaAJK === "function") renderSemuaAJK(); 
+            if(typeof renderTugasanPasukan === "function") renderTugasanPasukan();
+            if(typeof renderKalendar === "function") renderKalendar();
 
             // Auto-refresh UI secara live
             if(typeof renderChecklistMain === "function") renderChecklistMain();
