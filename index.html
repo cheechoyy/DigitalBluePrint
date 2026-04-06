@@ -637,6 +637,34 @@
     </div>
 
     <div id="modal-memo" class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 z-[999] flex justify-center items-center backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl p-6 w-96 transform transition-all">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="font-bold text-lg text-slate-800"><i class="fas fa-calendar-plus text-blue-500 mr-2"></i>Tambah Acara/Memo</h3>
+                <button onclick="tutupModalMemo()" class="text-slate-400 hover:text-red-500 transition"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            
+            <p class="text-sm font-bold text-slate-600 mb-2">Tarikh: <span id="label-tarikh-memo" class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded"></span></p>
+            
+            <textarea id="input-teks-memo" class="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-inner mb-4" placeholder="Taip butiran acara, mesyuarat, atau due date di sini..."></textarea>
+            
+            <div class="mb-5">
+                <p class="text-xs font-bold text-slate-500 uppercase mb-2">Pilih Warna Label:</p>
+                <div class="flex gap-3">
+                    <label class="cursor-pointer"><input type="radio" name="warnaMemo" value="blue" class="hidden peer" checked><div class="w-6 h-6 rounded-full bg-blue-500 peer-checked:ring-4 ring-blue-200 border border-white shadow-sm transition"></div></label>
+                    <label class="cursor-pointer"><input type="radio" name="warnaMemo" value="red" class="hidden peer"><div class="w-6 h-6 rounded-full bg-red-500 peer-checked:ring-4 ring-red-200 border border-white shadow-sm transition"></div></label>
+                    <label class="cursor-pointer"><input type="radio" name="warnaMemo" value="green" class="hidden peer"><div class="w-6 h-6 rounded-full bg-green-500 peer-checked:ring-4 ring-green-200 border border-white shadow-sm transition"></div></label>
+                    <label class="cursor-pointer"><input type="radio" name="warnaMemo" value="orange" class="hidden peer"><div class="w-6 h-6 rounded-full bg-orange-500 peer-checked:ring-4 ring-orange-200 border border-white shadow-sm transition"></div></label>
+                    <label class="cursor-pointer"><input type="radio" name="warnaMemo" value="purple" class="hidden peer"><div class="w-6 h-6 rounded-full bg-purple-500 peer-checked:ring-4 ring-purple-200 border border-white shadow-sm transition"></div></label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button id="btn-padam-memo" onclick="padamMemo()" class="hidden text-red-500 hover:text-red-700 text-sm font-bold px-3 py-2 hover:bg-red-50 rounded transition"><i class="fas fa-trash mr-1"></i> Padam</button>
+                <button onclick="simpanMemo()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-sm ml-auto"><i class="fas fa-save mr-1"></i> Simpan Acara</button>
+            </div>
+        </div>
+    </div>
+
 <script>
         // --- SISTEM IDENTITI PENGGUNA & LOG GLOBAL ---
         let penggunaSemasa = sessionStorage.getItem('BlueprintPengguna') || null;
@@ -922,7 +950,10 @@
 
         // FUNGSI BAHARU: Kemas kini data terus ke FIREBASE
         function kemasKiniPeserta(index, field, value) {
+            const namaPeserta = senaraiPeserta[index].nama;
             senaraiPeserta[index][field] = value;
+            
+            rekodLogGlobal(`Kemas kini ${field} peserta (${namaPeserta}) menjadi: ${value}`, `Senarai Peserta`);
             
             // Hantar ke Firebase
             if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
@@ -947,6 +978,7 @@
             };
 
             senaraiPeserta.push(dataPesertaBaharu);
+            rekodLogGlobal(`Pendaftaran peserta baharu: ${nama}`, `Senarai Peserta`);
             
             // Hantar ke Firebase
             if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
@@ -957,7 +989,9 @@
 
         function padamPeserta(index) {
             if(confirm("Padam data peserta ini dari pangkalan data?")) {
+                const namaPeserta = senaraiPeserta[index].nama;
                 senaraiPeserta.splice(index, 1);
+                rekodLogGlobal(`Padam peserta: ${namaPeserta}`, `Senarai Peserta`);
                 
                 // Hantar ke Firebase
                 if(window.simpanKeCloud) window.simpanKeCloud(senaraiPeserta);
@@ -1025,6 +1059,7 @@
             };
 
             checklistData.push(newItem);
+            rekodLogGlobal(`Mencipta Senarai Semak Utama baharu: ${tajukBaru}`, `Sistem Utama`);
             
             // Sync ke Firebase
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
@@ -1035,6 +1070,7 @@
             if(confirm("AWAS: Adakah anda pasti mahu memadam keseluruhan Senarai Semak ini? Segala rekod di dalamnya akan musnah.")) {
                 const index = checklistData.findIndex(d => d.id === id);
                 if (index !== -1) {
+                    const tajukChecklist = checklistData[index].title;
                     checklistData.splice(index, 1);
                     
                     // Jika tugasan ini ada di dalam pemetaan AJK (Jawatankuasa), buang juga
@@ -1042,6 +1078,8 @@
                         delete window.pemetaanItemKePasukan[id];
                     }
 
+                    rekodLogGlobal(`Memadam Senarai Semak Utama: ${tajukChecklist}`, `Sistem Utama`);
+                    
                     // Sync ke Firebase
                     if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
                     else renderChecklistMain();
@@ -1375,45 +1413,48 @@
 
                     if(!window.savedFiles[id]) window.savedFiles[id] = [];
                     // Simpan pautan (URL) dan nama ke Firestore
-                    window.savedFiles[id].push({ name: fileName, url: pautanURL, path: failPath });
-                } else {
-                    // Fallback jika Firebase Storage belum siap
-                    if(!window.savedFiles[id]) window.savedFiles[id] = [];
-                    window.savedFiles[id].push({ name: fileName, url: "#", path: "" });
+                window.savedFiles[id].push({ name: fileName, url: pautanURL, path: failPath });
+            } else {
+                // Fallback jika Firebase Storage belum siap
+                if(!window.savedFiles[id]) window.savedFiles[id] = [];
+                window.savedFiles[id].push({ name: fileName, url: "#", path: "" });
+            }
+
+            rekodLogGlobal(`Muat naik dokumen: ${fileName}`, `Senarai Semak (ID: ${id})`);
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+            input.value = ""; // Kosongkan input
+            alert("Dokumen berjaya dimuat naik & sedia untuk dimuat turun!");
+        } catch(e) {
+            console.error("Ralat muat naik:", e);
+            alert("Ralat memuat naik! Pastikan Firebase Storage telah diaktifkan dalam mode ujian.");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    async function padamFail(id, index) {
+        // Pengesahan sebelum memadam
+        if(confirm("AWAS: Adakah anda pasti mahu memadam dokumen ini? Tindakan ini tidak boleh diundurkan.")) {
+            if(window.savedFiles[id]) {
+                const failTarget = window.savedFiles[id][index];
+                const namaFail = failTarget ? failTarget.name : "Dokumen";
+                
+                // Cuba padam fail fizikal dari Firebase Storage jika ia ada path
+                if(failTarget && failTarget.path && window.storage && window.deleteObject) {
+                    try {
+                        const fileRef = window.storageRef(window.storage, failTarget.path);
+                        await window.deleteObject(fileRef);
+                    } catch(e) { console.error("Gagal memadam fail fizikal:", e); }
                 }
 
+                // Padam rekod pautan dari pangkalan data Firestore
+                window.savedFiles[id].splice(index, 1);
+                rekodLogGlobal(`Padam dokumen: ${namaFail}`, `Senarai Semak (ID: ${id})`);
                 if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
-                input.value = ""; // Kosongkan input
-                alert("Dokumen berjaya dimuat naik & sedia untuk dimuat turun!");
-            } catch(e) {
-                console.error("Ralat muat naik:", e);
-                alert("Ralat memuat naik! Pastikan Firebase Storage telah diaktifkan dalam mode ujian.");
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
             }
         }
-
-        async function padamFail(id, index) {
-            // Pengesahan sebelum memadam
-            if(confirm("AWAS: Adakah anda pasti mahu memadam dokumen ini? Tindakan ini tidak boleh diundurkan.")) {
-                if(window.savedFiles[id]) {
-                    const failTarget = window.savedFiles[id][index];
-                    
-                    // Cuba padam fail fizikal dari Firebase Storage jika ia ada path
-                    if(failTarget && failTarget.path && window.storage && window.deleteObject) {
-                        try {
-                            const fileRef = window.storageRef(window.storage, failTarget.path);
-                            await window.deleteObject(fileRef);
-                        } catch(e) { console.error("Gagal memadam fail fizikal:", e); }
-                    }
-
-                    // Padam rekod pautan dari pangkalan data Firestore
-                    window.savedFiles[id].splice(index, 1);
-                    if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
-                }
-            }
-        }
+    }
 
         function tambahLog(id) {
             const action = document.getElementById('log-action-' + id).value;
@@ -1424,12 +1465,14 @@
             if(!window.savedLogs[id]) window.savedLogs[id] = [];
             window.savedLogs[id].push({ date: dateStr, action: action, pic: pic || 'Admin' });
             
+            rekodLogGlobal(`Tambah jadual tindakan: ${action}`, `Senarai Semak (ID: ${id})`);
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function padamLog(id, index) {
             if(confirm("Adakah anda pasti mahu memadam rekod log tindakan ini?")) {
                 window.savedLogs[id].splice(index, 1);
+                rekodLogGlobal(`Padam satu rekod jadual tindakan`, `Senarai Semak (ID: ${id})`);
                 if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             }
         }
@@ -1671,17 +1714,21 @@
         // --- HANTAR PERUBAHAN AJK KE FIREBASE ---
         function updateAJK(idPasukan, index, field, value) {
             window.dataAJK[idPasukan][index][field] = value;
+            rekodLogGlobal(`Kemas kini ${field} AJK: ${value}`, `Jawatankuasa (${idPasukan})`);
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function tambahAJK(idPasukan) {
             window.dataAJK[idPasukan].push({ nama: "", tugas: "" });
+            rekodLogGlobal(`Tambah AJK baharu`, `Jawatankuasa (${idPasukan})`);
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
         }
 
         function buangAJK(idPasukan, index) {
             if(confirm("Adakah anda pasti mahu memadam AJK ini dari pangkalan data?")) {
+                const namaAJK = window.dataAJK[idPasukan][index].nama || "AJK Tanpa Nama";
                 window.dataAJK[idPasukan].splice(index, 1);
+                rekodLogGlobal(`Padam AJK: ${namaAJK}`, `Jawatankuasa (${idPasukan})`);
                 if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             }
         }
@@ -1759,6 +1806,7 @@
 
         function buangTugasanPasukan(itemId) {
             delete window.pemetaanItemKePasukan[itemId];
+            rekodLogGlobal(`Buang tugasan spesifik dari pasukan`, `Jawatankuasa (ID Tugasan: ${itemId})`);
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             else renderTugasanPasukan(); // Fallback jika offline
         }
@@ -1768,6 +1816,7 @@
             const itemId = parseInt(selectEl.value);
             if(itemId) {
                 window.pemetaanItemKePasukan[itemId] = idPasukan;
+                rekodLogGlobal(`Tambah tugasan spesifik baharu`, `Jawatankuasa (${idPasukan})`);
                 if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
                 else renderTugasanPasukan();
             }
@@ -1833,14 +1882,14 @@
 
             // Masukkan tarikh (1 sehingga hujung bulan)
             for (let i = 1; i <= jumlahHari; i++) {
-                let kelasTambahan = "hover:bg-slate-200 hover:text-blue-600 rounded cursor-pointer transition font-medium py-1 relative flex flex-col items-center justify-center min-h-[32px]";
+                let kelasTambahan = "hover:bg-slate-200 hover:text-blue-600 rounded cursor-pointer transition font-medium py-1 relative flex flex-col items-center justify-center min-h-[32px] group";
                 
                 if (calBulan === 4 && calTahun === 2026 && (i === 19 || i === 20 || i === 21)) {
-                    kelasTambahan = "bg-red-50 text-red-600 font-bold border border-red-200 rounded shadow-sm hover:bg-red-100 relative flex flex-col items-center justify-center min-h-[32px]";
+                    kelasTambahan = "bg-red-50 text-red-600 font-bold border border-red-200 rounded shadow-sm hover:bg-red-100 relative flex flex-col items-center justify-center min-h-[32px] group";
                 }
                 
                 if (i === harini.getDate() && calBulan === harini.getMonth() && calTahun === harini.getFullYear()) {
-                    kelasTambahan = "bg-blue-600 text-white font-bold rounded shadow-md hover:bg-blue-700 relative flex flex-col items-center justify-center min-h-[32px]";
+                    kelasTambahan = "bg-blue-600 text-white font-bold rounded shadow-md hover:bg-blue-700 relative flex flex-col items-center justify-center min-h-[32px] group";
                 }
 
                 // Cek jika ada memo pada tarikh ini
@@ -1850,8 +1899,17 @@
                 let memoIndicator = '';
                 let titleAttr = '';
                 if(adaMemo) {
-                    memoIndicator = `<div class="absolute bottom-0.5 w-3 h-1 rounded-full bg-${adaMemo.color}-500 shadow-sm"></div>`;
-                    titleAttr = `title="${adaMemo.text}"`;
+                    // Cipta tooltip CSS untuk memaparkan teks penuh
+                    titleAttr = `title="Acara: ${adaMemo.text}"`;
+                    
+                    // Terjemahkan warna kod ke kod Tailwind yang selamat
+                    const bgColors = {
+                        'blue': 'bg-blue-500', 'red': 'bg-red-500', 'green': 'bg-green-500',
+                        'orange': 'bg-orange-500', 'purple': 'bg-purple-500'
+                    };
+                    const safeColor = bgColors[adaMemo.color] || 'bg-blue-500';
+                    
+                    memoIndicator = `<div class="absolute bottom-0.5 w-3 h-1 rounded-full ${safeColor} shadow-sm group-hover:scale-150 transition-transform"></div>`;
                 }
 
                 grid.innerHTML += `<div class="${kelasTambahan}" onclick="bukaModalMemo(${i}, ${calBulan}, ${calTahun})" ${titleAttr}>
@@ -1869,11 +1927,15 @@
             const senaraiBulan = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
             document.getElementById('label-tarikh-memo').innerText = `${hari} ${senaraiBulan[bulan]} ${tahun}`;
             
+            // Periksa jika ada rekod dalam memori/Firebase
             const memoData = window.kalendarMemos[tarikhMemoSemasa];
+            const modalEl = document.getElementById('modal-memo');
             
             if(memoData) {
                 document.getElementById('input-teks-memo').value = memoData.text;
-                document.querySelector(`input[name="warnaMemo"][value="${memoData.color}"]`).checked = true;
+                // Tetapkan warna yang betul
+                const radioBtn = document.querySelector(`input[name="warnaMemo"][value="${memoData.color}"]`);
+                if(radioBtn) radioBtn.checked = true;
                 document.getElementById('btn-padam-memo').classList.remove('hidden');
             } else {
                 document.getElementById('input-teks-memo').value = "";
@@ -1881,7 +1943,7 @@
                 document.getElementById('btn-padam-memo').classList.add('hidden');
             }
             
-            document.getElementById('modal-memo').classList.remove('hidden');
+            if(modalEl) modalEl.classList.remove('hidden');
         }
 
         function tutupModalMemo() {
@@ -1895,6 +1957,7 @@
             if(teks === "") { alert("Sila taip sesuatu memo."); return; }
             
             window.kalendarMemos[tarikhMemoSemasa] = { text: teks, color: warna };
+            rekodLogGlobal(`Menambah/Edit memo: ${teks}`, `Kalendar (${tarikhMemoSemasa})`);
             
             if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
             else renderKalendar(); // Fallback
@@ -1905,6 +1968,7 @@
         function padamMemo() {
             if(confirm("Padam memo ini?")) {
                 delete window.kalendarMemos[tarikhMemoSemasa];
+                rekodLogGlobal(`Padam memo`, `Kalendar (${tarikhMemoSemasa})`);
                 if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
                 else renderKalendar();
                 tutupModalMemo();
