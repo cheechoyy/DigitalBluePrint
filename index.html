@@ -74,7 +74,7 @@
                     </div>
                 <div class="mt-5 text-[10px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1.5">
                     <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-blue-600 rounded shadow-sm"></div> Hari Ini</div>
-                    <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-red-50 border border-red-300 rounded shadow-sm"></div> Bengkel (19-21 Mei)</div>
+                    <div class="flex items-center gap-2 font-medium"><div class="w-3 h-3 bg-red-50 border border-red-300 rounded shadow-sm"></div> <span id="legend-tarikh-bengkel-kalendar">Bengkel (19-21 Mei)</span></div>
                     <div class="flex items-center gap-2 font-medium mt-2 pt-2 border-t border-slate-200"><i class="fas fa-hand-pointer text-slate-400"></i> Klik tarikh untuk tambah memo</div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                         <span class="text-[9px] font-medium text-blue-300 uppercase">Minit</span>
                     </div>
                 </div>
-                <p class="text-[10px] text-blue-300 mt-4 text-center italic border-t border-blue-800/50 pt-2">Sasar: 19 Mei 2026, 08:00 PG</p>
+                <p id="teks-sasar-countdown" class="text-[10px] text-blue-300 mt-4 text-center italic border-t border-blue-800/50 pt-2">Memuatkan sasar...</p>
             </div>
         </aside>
 
@@ -132,9 +132,12 @@
                 </div>
 
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 relative group">
-                    <h3 class="text-lg font-bold mb-4 text-slate-800 flex justify-between items-center">
+                    <h3 class="text-lg font-bold mb-4 text-slate-800 flex justify-between items-center gap-2">
                         <span><i class="fas fa-bullseye text-red-500 mr-2"></i>Fokus Utama Pembentangan:</span>
-                        <button onclick="toggleFokusEditMode()" class="text-xs font-semibold text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1.5 rounded transition shadow-sm"><i class="fas fa-edit mr-1"></i>Urus Fokus</button>
+                        <div class="flex gap-1.5">
+                            <button onclick="bukaModalEditTarikh()" class="text-xs font-semibold text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded transition shadow-sm border border-red-200"><i class="fas fa-calendar-alt mr-1"></i>Urus Tarikh</button>
+                            <button onclick="toggleFokusEditMode()" class="text-xs font-semibold text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1.5 rounded transition shadow-sm"><i class="fas fa-edit mr-1"></i>Urus Fokus</button>
+                        </div>
                     </h3>
                     
                     <ul id="senarai-fokus-utama" class="list-none space-y-3 text-slate-700">
@@ -548,7 +551,7 @@
                 <div class="flex justify-between items-end border-b pb-4 mb-8">
                     <div>
                         <h2 class="text-3xl font-bold text-slate-800">Garis Masa Pelaksanaan (Flow Timeline)</h2>
-                        <p class="text-slate-500 mt-2">Tarikh Semasa: <span class="font-bold text-blue-600">1 April 2026</span> | Tarikh Bengkel: <span class="font-bold text-red-500">19 - 21 Mei 2026</span></p>
+                        <p class="text-slate-500 mt-2">Tarikh Semasa: <span class="font-bold text-blue-600">1 April 2026</span> | Tarikh Bengkel: <span id="tajuk-tarikh-fasa2" class="font-bold text-red-500">19 - 21 Mei 2026</span></p>
                     </div>
                     <div class="hidden md:block">
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Status Kemajuan: <span id="progress-timeline" class="text-blue-900 font-black">0%</span></span>
@@ -588,7 +591,7 @@
                             </div>
                             <div class="w-full">
                                 <h3 class="text-xl font-bold text-orange-600">FASA 2: BENGKEL</h3>
-                                <p class="text-sm font-bold text-red-500 mb-3 bg-red-50 inline-block px-2 py-1 rounded mt-1 border border-red-100">19 - 21 Mei 2026</p>
+                                <p id="label-tarikh-card-fasa2" class="text-sm font-bold text-red-500 mb-3 bg-red-50 inline-block px-2 py-1 rounded mt-1 border border-red-100">19 - 21 Mei 2026</p>
                                 
                                 <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg shadow-sm w-full text-left" id="card-semasa">
                                     <p class="text-xs font-bold text-orange-600 uppercase mb-2">Status: Akan Datang <i class="far fa-clock ml-1"></i></p>
@@ -631,6 +634,49 @@
 
         </main>
     </main>
+    </div>
+
+    <div id="modal-edit-tarikh" class="hidden fixed inset-0 bg-slate-900 bg-opacity-70 z-[1000] flex justify-center items-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[450px] transform transition-all flex flex-col border border-slate-200">
+            <div class="flex justify-between items-center border-b pb-4 mb-5 gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center border-4 border-white shadow-sm flex-shrink-0">
+                        <i class="fas fa-calendar-alt text-2xl text-red-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-xl text-slate-800">Urus Tarikh Bengkel</h3>
+                        <p class="text-xs text-slate-500">Kemas kini sasar tarikh & waktu bengkel</p>
+                    </div>
+                </div>
+                <button onclick="tutupModalEditTarikh()" class="text-slate-400 hover:text-red-500 transition"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            
+            <p class="text-xs text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100 mb-6 italic"><i class="fas fa-info-circle mr-1.5 text-blue-500"></i>Perubahan di sini akan mengemas kini <strong>Countdown</strong>, paparan <strong>Garis Masa</strong>, dan highlight dalam <strong>Kalendar</strong> secara automatik.</p>
+            
+            <div class="space-y-5 flex-1 pr-1">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tarikh & Waktu MULA (Sasar Countdown)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"><i class="fas fa-play text-slate-400 text-sm"></i></div>
+                        <input type="datetime-local" id="input-bengkel-mula" required class="w-full pl-10 p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-sm shadow-sm transition cursor-pointer font-semibold text-slate-700">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tarikh & Waktu TAMAT</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"><i class="fas fa-stop text-slate-400 text-sm"></i></div>
+                        <input type="datetime-local" id="input-bengkel-tamat" required class="w-full pl-10 p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-sm shadow-sm transition cursor-pointer font-semibold text-slate-700">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center pt-5 mt-6 border-t border-slate-100 gap-3">
+                <button onclick="tutupModalEditTarikh()" class="text-slate-500 hover:text-slate-700 text-sm font-bold px-4 py-2.5 hover:bg-slate-100 rounded-lg transition">Batal</button>
+                <button onclick="simpanTarikhBengkelBaharu()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition shadow-sm flex items-center">
+                    <i class="fas fa-save mr-2"></i> Kemas Kini Live
+                </button>
+            </div>
+        </div>
     </div>
 
     <div id="modal-identiti" class="hidden fixed inset-0 bg-slate-900 bg-opacity-80 z-[1000] flex justify-center items-center backdrop-blur-md">
@@ -688,6 +734,11 @@
     </div>
 
 <script>
+        // --- [TAMBAH INI] CONFIG TARIKH BENGKEL DINAMIK ---
+        // Tarikh lalai jika Firebase gagal dimuatkan (hardcoded asal)
+        window.bengkelStartStr = "2026-05-19T08:00:00"; 
+        window.bengkelEndStr = "2026-05-21T17:00:00";
+
         // --- SISTEM IDENTITI PENGGUNA & LOG GLOBAL ---
         let penggunaSemasa = sessionStorage.getItem('BlueprintPengguna') || null;
         window.globalActivityLog = window.globalActivityLog || [];
@@ -1590,6 +1641,9 @@
                     timelineBar.style.width = timelineBarWidth + '%';
                 }
             }
+            // PASTIKAN DUA FUNGSI INI DIPANGGIL DI SINI:
+            kiraMingguSemasa(); 
+            updateUITarikhDinamik(); 
         }
 
         // --- FUNGSI TIMELINE FASA CHECKLIST ---
@@ -1857,19 +1911,36 @@
 
         // FUNGSI KIRAAN DETIK (COUNTDOWN)
         function mulakanKiraanDetik() {
-            const tarikhBengkel = new Date("May 19, 2026 08:00:00").getTime();
+            // [MODIFIKASI] Sasar tarikh bengkel dinamik (waktu mula)
+            const tarikhBengkelTarget = new Date(window.bengkelStartStr).getTime();
 
-            const x = setInterval(function() {
+            // [TAMBAH] Clear interval lama jika ada (penting bila tarikh diupdate live)
+            if(window.bengkelCountdownInterval) clearInterval(window.bengkelCountdownInterval);
+
+            // [TAMBAH] Update tarikh teks target di UI
+            const labelSasar = document.getElementById('teks-sasar-countdown');
+            if(labelSasar) {
+                const sasarDinamik = new Date(window.bengkelStartStr);
+                const formatDinamik = sasarDinamik.toLocaleDateString('ms-MY', { day: 'numeric', month: 'Long', year: 'numeric' }) + ", " + 
+                                       sasarDinamik.toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
+                labelSasar.innerText = "Sasar: " + formatDinamik;
+            }
+
+            window.bengkelCountdownInterval = setInterval(function() {
                 const sekarang = new Date().getTime();
-                const jarak = tarikhBengkel - sekarang;
+                const jarak = tarikhBengkelTarget - sekarang;
+
+                const cHari = document.getElementById("count-hari");
+                const cJam = document.getElementById("count-jam");
+                const cMinit = document.getElementById("count-minit");
+
+                if(!cHari || !cJam || !cMinit) return;
 
                 if (jarak < 0) {
-                    clearInterval(x);
-                    if(document.getElementById("count-hari")) {
-                        document.getElementById("count-hari").innerText = "00";
-                        document.getElementById("count-jam").innerText = "00";
-                        document.getElementById("count-minit").innerText = "00";
-                    }
+                    clearInterval(window.bengkelCountdownInterval);
+                    cHari.innerText = "00";
+                    cJam.innerText = "00";
+                    cMinit.innerText = "00";
                     return;
                 }
 
@@ -1877,11 +1948,10 @@
                 const jam = Math.floor((jarak % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minit = Math.floor((jarak % (1000 * 60 * 60)) / (1000 * 60));
 
-                if(document.getElementById("count-hari")) {
-                    document.getElementById("count-hari").innerText = hari < 10 ? '0'+hari : hari;
-                    document.getElementById("count-jam").innerText = jam < 10 ? '0'+jam : jam;
-                    document.getElementById("count-minit").innerText = minit < 10 ? '0'+minit : minit;
-                }
+                cHari.innerText = hari < 10 ? '0'+hari : hari;
+                cJam.innerText = jam < 10 ? '0'+jam : jam;
+                cMinit.innerText = minit < 10 ? '0'+minit : minit;
+                
             }, 1000);
         }
 
@@ -1913,16 +1983,23 @@
         function renderKalendar() {
             const grid = document.getElementById('kalendar-grid');
             const tajuk = document.getElementById('kalendar-bulan-tahun');
+            if(!grid || !tajuk) return;
             grid.innerHTML = '';
 
             const senaraiBulan = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
             tajuk.innerText = `${senaraiBulan[calBulan]} ${calTahun}`;
 
-            // Dapatkan hari pertama dalam bulan tersebut (0 = Ahad, 1 = Isnin...)
+            // Dapatkan hari pertama dalam bulan tersebut
             const hariPertama = new Date(calTahun, calBulan, 1).getDay();
             // Dapatkan jumlah hari dalam bulan tersebut
             const jumlahHari = new Date(calTahun, calBulan + 1, 0).getDate();
             const harini = new Date();
+
+            // [MODIFIKASI] Sediakan tarikh pembanding bengkel dinamik
+            const bStart = new Date(window.bengkelStartStr);
+            const bEnd = new Date(window.bengkelEndStr);
+            bStart.setHours(0,0,0,0); // Set masa ke 00:00 untuk perbandingan hari yang tepat
+            bEnd.setHours(23,59,59,999); // Set ke hujung hari
 
             // Masukkan kotak kosong untuk hari sebelum 1 haribulan
             for (let i = 0; i < hariPertama; i++) {
@@ -1934,12 +2011,16 @@
 
             // Masukkan tarikh (1 sehingga hujung bulan)
             for (let i = 1; i <= jumlahHari; i++) {
+                const tarikhSemasaChecked = new Date(calTahun, calBulan, i);
+                
                 let kelasTambahan = "hover:bg-slate-200 hover:text-blue-600 rounded cursor-pointer transition font-medium py-1 relative flex flex-col items-center justify-center min-h-[32px] group";
                 
-                if (calBulan === 4 && calTahun === 2026 && (i === 19 || i === 20 || i === 21)) {
+                // [MODIFIKASI LOGIK DINAMIK] Semak jika tarikh i jatuh dalam jarak masa bengkel (Mula - Tamat)
+                if (tarikhSemasaChecked >= bStart && tarikhSemasaChecked <= bEnd) {
                     kelasTambahan = "bg-red-50 text-red-600 font-bold border border-red-200 rounded shadow-sm hover:bg-red-100 relative flex flex-col items-center justify-center min-h-[32px] group";
                 }
                 
+                // Highlight Hari Ini
                 if (i === harini.getDate() && calBulan === harini.getMonth() && calTahun === harini.getFullYear()) {
                     kelasTambahan = "bg-blue-600 text-white font-bold rounded shadow-md hover:bg-blue-700 relative flex flex-col items-center justify-center min-h-[32px] group";
                 }
@@ -1949,18 +2030,12 @@
                 const adaMemo = window.kalendarMemos[tarikhKey];
                 
                 let memoIndicator = '';
-                let titleAttr = '';
+                let titleAttr = `title="Klik tarikh untuk urus memo"`;
+                
                 if(adaMemo) {
-                    // Cipta tooltip CSS untuk memaparkan teks penuh
                     titleAttr = `title="Acara: ${adaMemo.text}"`;
-                    
-                    // Terjemahkan warna kod ke kod Tailwind yang selamat
-                    const bgColors = {
-                        'blue': 'bg-blue-500', 'red': 'bg-red-500', 'green': 'bg-green-500',
-                        'orange': 'bg-orange-500', 'purple': 'bg-purple-500'
-                    };
+                    const bgColors = { 'blue': 'bg-blue-500', 'red': 'bg-red-500', 'green': 'bg-green-500', 'orange': 'bg-orange-500', 'purple': 'bg-purple-500' };
                     const safeColor = bgColors[adaMemo.color] || 'bg-blue-500';
-                    
                     memoIndicator = `<div class="absolute bottom-0.5 w-3 h-1 rounded-full ${safeColor} shadow-sm group-hover:scale-150 transition-transform"></div>`;
                 }
 
@@ -2204,8 +2279,8 @@
 
         // --- MENGGERAKKAN KESEMUA SISTEM KETIKA LAMAN DIBUKA ---
         window.onload = function() {
-            semakPengguna();         // Check Identiti AJK
-            renderLogGlobal();       // Render Laci Aktiviti
+            semakPengguna();         
+            renderLogGlobal();       
             paparJadualBerkumpulan();
             renderChecklistMain();
             renderSemuaAJK();        
@@ -2215,8 +2290,86 @@
             renderKalendar();        
             renderMindMap();         
             renderFokusUtama();
-            mulakanKiraanDetik();    // Aktifkan Kiraan Detik Bengkel
+            mulakanKiraanDetik();    
         };
+
+        // --- FUNGSI UPDATE UI TIMELINE (Dimasukkan sebagai fungsi berasingan supaya boleh dipanggil) ---
+        function updateUITarikhDinamik() {
+            const dStart = new Date(window.bengkelStartStr);
+            const dEnd = new Date(window.bengkelEndStr);
+            
+            // Format Jarak Tarikh Singkat (Cth: "19-21 Mei")
+            const formatSingkat = formatJarakTarikhSingkat(dStart, dEnd);
+            
+            // Update Legend Kalendar
+            const legendK = document.getElementById('legend-tarikh-bengkel-kalendar');
+            if(legendK) legendK.innerText = "Bengkel (" + formatSingkat + ")";
+            
+            // Update Card Fasa 2 Timeline
+            const cardFasa2T = document.getElementById('label-tarikh-card-fasa2');
+            if(cardFasa2T) cardFasa2T.innerText = formatSingkat;
+            
+            // Update Tajuk Fasa 2 Timeline (Jika anda tambah span id="tajuk-tarikh-fasa2")
+            const fasa2T = document.getElementById('tajuk-tarikh-fasa2');
+            if(fasa2T) fasa2T.innerText = formatSingkat;
+        }
+        // --- [TAMBAH INI] FUNGSI HELPER & LOGIK MODAL TARIKH (ADMIN) ---
+
+        // Fungsi Helper untuk format jarak tarikh pendek (Cth: "19-21 Mei 2026")
+        function formatJarakTarikhSingkat(dMula, dTamat) {
+            const bulanMula = dMula.getMonth();
+            const bulanTamat = dTamat.getMonth();
+            const tahun = dMula.getFullYear();
+            const senaraiBulan = ["Jan", "Feb", "Mac", "Apr", "Mei", "Jun", "Jul", "Ogos", "Sep", "Okt", "Nov", "Dis"];
+
+            if (bulanMula === bulanTamat) {
+                // Bulan sama: "19 - 21 Mei 2026"
+                return `${dMula.getDate()} - ${dTamat.getDate()} ${senaraiBulan[bulanMula]} ${tahun}`;
+            } else {
+                // Bulan berbeza: "30 Mei - 1 Jun 2026"
+                return `${dMula.getDate()} ${senaraiBulan[bulanMula]} - ${dTamat.getDate()} ${senaraiBulan[bulanTamat]} ${tahun}`;
+            }
+        }
+
+        // FUNGSI MODAL EDIT TARIKH (ADMIN)
+        function bukaModalEditTarikh() {
+            // Set input dengan tarikh semasa yang disimpan (YYYY-MM-DDThh:mm)
+            document.getElementById('input-bengkel-mula').value = window.bengkelStartStr.substring(0, 16); 
+            document.getElementById('input-bengkel-tamat').value = window.bengkelEndStr.substring(0, 16);
+            
+            document.getElementById('modal-edit-tarikh').classList.remove('hidden');
+        }
+
+        function tutupModalEditTarikh() {
+            document.getElementById('modal-edit-tarikh').classList.add('hidden');
+        }
+
+        function simpanTarikhBengkelBaharu() {
+            const inMula = document.getElementById('input-bengkel-mula').value;
+            const inTamat = document.getElementById('input-bengkel-tamat').value;
+
+            if(!inMula || !inTamat) { alert("Sila lengkapkan kedua-dua tarikh mula dan tamat."); return; }
+
+            const dMula = new Date(inMula);
+            const dTamat = new Date(inTamat);
+
+            if(dTamat <= dMula) { alert("Ralat: Tarikh tamat mesti selepas tarikh mula."); return; }
+
+            // Simpan format ISO String (Firebase friendly)
+            window.bengkelStartStr = dMula.toISOString();
+            window.bengkelEndStr = dTamat.toISOString();
+
+            // Format makluman untuk log
+            const fmtLogs = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const teksLog = "Kemas kini tarikh bengkel: " + dMula.toLocaleDateString('ms-MY', fmtLogs) + " hingga " + dTamat.toLocaleDateString('ms-MY', fmtLogs);
+            rekodLogGlobal(teksLog, "Konfigurasi Sistem");
+
+            // Sync ke Firebase
+            if(window.simpanDataUtamaKeCloud) window.simpanDataUtamaKeCloud();
+
+            alert("Tarikh bengkel berjaya dikemas kini secara Live!");
+            tutupModalEditTarikh();
+        }
 
         const senaraiAJK = {
   "maklumat_projek": {
@@ -2347,28 +2500,32 @@
         }
     });
 
-    // 2. JAMBATAN DATA KESELURUHAN (TERMASUK DINAMIK SUB-TUGASAN & FOKUS)
+    // 2. JAMBATAN DATA KESELURUHAN (MODIFIKASI UNTUK TERMASUK TARIKH BENGKEL)
     window.simpanDataUtamaKeCloud = async function() {
         try {
             await setDoc(doc(window.db, "SistemHPU", "DataUtama"), {
+                // [TAMBAH INI] Simpan Tarikh Dinamik ke Cloud
+                bengkelStartStr: window.bengkelStartStr,
+                bengkelEndStr: window.bengkelEndStr,
+
                 subtaskStatus: window.subtaskStatus || {},
                 savedRemark: window.savedRemark || {},
                 savedFiles: window.savedFiles || {},
                 savedLogs: window.savedLogs || {},
                 dataAJK: window.dataAJK || window.lalaiDataAJK,
                 pemetaanTugasan: window.pemetaanItemKePasukan || window.lalaiPemetaan,
-                kalendarMemos: window.kalendarMemos || {},
-                checklistStruktur: checklistData, 
-                dataFokusUtama: window.dataFokusUtama || window.lalaiFokusUtama,
-                globalActivityLog: window.globalActivityLog || [] // TAMBAHAN: Simpan Log Aktiviti
+                kalendarMemos: window.kalendarMemos || {}
             });
-        } catch(e) {
-            console.error("Firebase Gagal Menyimpan:", e);
-        }
+        } catch(e) { console.error("Firebase Simpan Gagal:", e); }
     };
     onSnapshot(doc(window.db, "SistemHPU", "DataUtama"), (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
+
+            // [TAMBAH INI] Baca Tarikh Dinamik dari Cloud & Update State Global
+            window.bengkelStartStr = data.bengkelStartStr || window.bengkelStartStr;
+            window.bengkelEndStr = data.bengkelEndStr || window.bengkelEndStr;
+
             window.subtaskStatus = data.subtaskStatus || {};
             window.savedRemark = data.savedRemark || {};
             window.savedFiles = data.savedFiles || {};
@@ -2376,32 +2533,23 @@
             window.dataAJK = data.dataAJK || window.lalaiDataAJK;
             window.pemetaanItemKePasukan = data.pemetaanTugasan || window.lalaiPemetaan;
             window.kalendarMemos = data.kalendarMemos || {};
-            window.dataFokusUtama = data.dataFokusUtama || window.lalaiFokusUtama; // Baca Fokus Utama
-            window.globalActivityLog = data.globalActivityLog || []; // TAMBAHAN: Baca Log Aktiviti
-            if(typeof renderLogGlobal === "function") renderLogGlobal(); // Refresh UI Laci Log
             
-            if(data.checklistStruktur) {
-                checklistData = data.checklistStruktur; 
-            }
-
+            if(typeof renderLogGlobal === "function") renderLogGlobal(); 
+            
             // Auto-refresh UI secara live
-            if(typeof renderFokusUtama === "function") renderFokusUtama(); // Refresh Fokus Utama
             if(typeof renderChecklistMain === "function") renderChecklistMain();
             if(typeof renderSemuaAJK === "function") renderSemuaAJK(); 
             if(typeof renderTugasanPasukan === "function") renderTugasanPasukan();
-            if(typeof renderKalendar === "function") renderKalendar();
             
-            // Auto-jana butang nama identiti (Penting jika internet AJK lambat memuat data)
+            // [TAMBAH INI] Refresh komponen yang bergantung pada tarikh
+            if(typeof renderKalendar === "function") renderKalendar();
+            if(typeof mulakanKiraanDetik === "function") mulakanKiraanDetik(); // Re-mulakan countdown dengan sasar baharu
+
+            // Auto-jana butang nama identiti
             const modalIdentiti = document.getElementById('modal-identiti');
             if(modalIdentiti && !modalIdentiti.classList.contains('hidden')) {
                 if(typeof renderPilihanNamaAJK === "function") renderPilihanNamaAJK();
             }
-
-            // Auto-refresh UI secara live
-            if(typeof renderChecklistMain === "function") renderChecklistMain();
-            if(typeof renderSemuaAJK === "function") renderSemuaAJK(); 
-            if(typeof renderTugasanPasukan === "function") renderTugasanPasukan();
-            if(typeof renderKalendar === "function") renderKalendar(); // Refresh Kalendar
 
             // Kemas kini tetingkap perincian jika sedang dibuka
             const detailView = document.getElementById('checklist-detail-view');
