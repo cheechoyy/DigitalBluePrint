@@ -547,7 +547,7 @@
                 </div>
             </div>
 
-            
+
             <div id="timeline" class="tab-content bg-white rounded-xl shadow-md p-8 border border-slate-100">
                 <div class="flex justify-between items-end border-b pb-4 mb-8">
                     <div>
@@ -1922,8 +1922,8 @@
             const labelSasar = document.getElementById('teks-sasar-countdown');
             if(labelSasar) {
                 const sasarDinamik = new Date(window.bengkelStartStr);
-                const formatDinamik = sasarDinamik.toLocaleDateString('ms-MY', { day: 'numeric', month: 'Long', year: 'numeric' }) + ", " + 
-                                       sasarDinamik.toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
+                const formatDinamik = sasarDinamik.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' }) + ", " + 
+                                        sasarDinamik.toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
                 labelSasar.innerText = "Sasar: " + formatDinamik;
             }
 
